@@ -62,14 +62,7 @@ public class GamePanel extends JPanel {
         g.setColor(color);
         g.fillRect((int) xDelta, (int) yDelta, 200, 50);
 
-        frames++;
-        if (System.currentTimeMillis() - lastCheck >= 1000) {
-            lastCheck = System.currentTimeMillis();
-            System.out.println("FPS: " + frames);
-            frames = 0;
-        }
-
-        repaint();
+        
     }
 
     private void updateRectangle() {
