@@ -37,9 +37,8 @@ public class GamePanel extends JPanel {
     }
 
     private void importImg() {
-        InputStream is = getClass().getResourceAsStream("/Sonic.png");
         try {
-            img = ImageIO.read(is);
+            img = ImageIO.read(new FileInputStream("2D Game\\resources\\Sonic.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
