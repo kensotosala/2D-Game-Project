@@ -18,6 +18,7 @@ public class GamePanel extends JPanel {
     private float xDelta = 100;
     private float yDelta = 100;
     private BufferedImage img;
+    private BufferedImage subImg;
 
     // Constructor
     public GamePanel() {
@@ -70,7 +71,9 @@ public class GamePanel extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // g.drawImage(null, x, y, null);
+
+        subImg = img.getSubimage(1 * 64, 8 * 40, 64, 40);
+        g.drawImage(subImg, (int) xDelta, (int) yDelta, 128, 80, null);
     }
 
 }
