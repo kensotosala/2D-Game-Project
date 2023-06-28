@@ -3,10 +3,8 @@ package Vista;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import Modelo.KeyboardInputs;
@@ -21,8 +19,10 @@ public class GamePanel extends JPanel {
     private MouseInputs mouseInputs; // Manejador de entradas de ratón
     private float xDelta = 100; // Delta de desplazamiento en el eje x
     private float yDelta = 100; // Delta de desplazamiento en el eje y
-    private BufferedImage img; // Imagen principal
-    private BufferedImage subImg; // Subimagen de la imagen principal
+    private BufferedImage[] idleAnimation;
+    private int animationTick = 30;
+    private int animationIndex = 30;
+    private int animationSpeed = 15;
 
     /**
      * Constructor de la clase GamePanel.
@@ -35,7 +35,7 @@ public class GamePanel extends JPanel {
         mouseInputs = new MouseInputs(this);
 
         // Importar la imagen
-        importImg();
+        loadAnimation();
 
         // Establecer el tamaño del panel
         setPanelSize();
@@ -48,14 +48,20 @@ public class GamePanel extends JPanel {
         addMouseMotionListener(mouseInputs);
     }
 
-    /**
-     * Importa la imagen desde un archivo.
-     */
-    private void importImg() {
-        try {
-            img = ImageIO.read(new FileInputStream("2D Game\\resources\\Sonic.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void loadAnimation() {
+        File folder = new File("2D Game\\resources\\Idle"); // Ruta del directorio donde se encuentran las imágenes
+        File[] imageFiles = folder.listFiles();
+
+        if (imageFiles != null) {
+            idleAnimation = new BufferedImage[imageFiles.length];
+
+            for (int i = 0; i < imageFiles.length; i++) {
+                try {
+                    idleAnimation[i] = ImageIO.read(imageFiles[i]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -98,6 +104,17 @@ public class GamePanel extends JPanel {
         this.yDelta = y;
     }
 
+    private void updateAnimationTick() {
+        animationTick++;
+        if (animationTick >= animationSpeed) {
+            animationTick = 0;
+            animationIndex++;
+            if (animationIndex >= idleAnimation.length) {
+                animationIndex = 0;
+            }
+        }
+    }
+
     /**
      * Sobrescribe el método paintComponent para dibujar la subimagen en el panel.
      * 
@@ -106,10 +123,9 @@ public class GamePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Obtener la subimagen de la imagen principal
-        subImg = img.getSubimage(1 * 64, 8 * 40, 64, 40);
+        updateAnimationTick();
 
         // Dibujar la subimagen en el contexto gráfico
-        g.drawImage(subImg, (int) xDelta, (int) yDelta, 128, 80, null);
+        g.drawImage(idleAnimation[animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
     }
 }

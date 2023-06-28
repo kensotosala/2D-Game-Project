@@ -1,5 +1,7 @@
 package Controlador;
 
+import java.io.IOException;
+
 import Vista.GamePanel;
 import Vista.GameWindow;
 
@@ -11,7 +13,7 @@ public class Game implements Runnable {
     private final int FPS_SET = 120;
 
     // Constructor
-    public Game() {
+    public Game() throws IOException {
         // Inicializa el panel de juego y la ventana del juego
         gamePanel = new GamePanel();
         gameWindow = new GameWindow(gamePanel);
