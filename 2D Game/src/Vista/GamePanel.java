@@ -20,6 +20,7 @@ public class GamePanel extends JPanel {
     private float xDelta = 100; // Delta de desplazamiento en el eje x
     private float yDelta = 100; // Delta de desplazamiento en el eje y
     private BufferedImage[] idleAnimation;
+    private BufferedImage[] runningAnimation;
     private int animationTick = 30;
     private int animationIndex = 30;
     private int animationSpeed = 15;
@@ -36,6 +37,7 @@ public class GamePanel extends JPanel {
 
         // Importar la imagen
         loadAnimation();
+        loadRunninAnimation();
 
         // Establecer el tamaño del panel
         setPanelSize();
@@ -58,6 +60,24 @@ public class GamePanel extends JPanel {
             for (int i = 0; i < imageFiles.length; i++) {
                 try {
                     idleAnimation[i] = ImageIO.read(imageFiles[i]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void loadRunninAnimation() {
+        File folder = new File("2D Game\\resources\\idle-running"); // Ruta del directorio donde se encuentran las
+                                                                    // imágenes
+        File[] imageFiles = folder.listFiles();
+
+        if (imageFiles != null) {
+            runningAnimation = new BufferedImage[imageFiles.length];
+
+            for (int i = 0; i < imageFiles.length; i++) {
+                try {
+                    runningAnimation[i] = ImageIO.read(imageFiles[i]);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -109,7 +129,7 @@ public class GamePanel extends JPanel {
         if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex++;
-            if (animationIndex >= idleAnimation.length) {
+            if (animationIndex >= runningAnimation.length) {
                 animationIndex = 0;
             }
         }
@@ -126,6 +146,11 @@ public class GamePanel extends JPanel {
         updateAnimationTick();
 
         // Dibujar la subimagen en el contexto gráfico
-        g.drawImage(idleAnimation[animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
+        // g.drawImage(idleAnimation[animationIndex], (int) xDelta, (int) yDelta, 128,
+        // 80, null);
+
+        // Running Animation
+        g.drawImage(runningAnimation[animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
+
     }
 }
