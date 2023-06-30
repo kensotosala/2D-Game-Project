@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import Modelo.KeyboardInputs;
 import Modelo.MouseInputs;
 
+import static Modelo.Utilities.Constants.PlayerConstants.*;
+
 /**
  * La clase GamePanel representa un panel de juego en el que se dibuja una
  * imagen y se controla mediante entradas de teclado y ratón.
@@ -21,9 +23,14 @@ public class GamePanel extends JPanel {
     private float yDelta = 100; // Delta de desplazamiento en el eje y
     private BufferedImage[] idleAnimation;
     private BufferedImage[] runningAnimation;
+    private BufferedImage[] attackJumpAnimation;
+    private BufferedImage[] attackAnimation;
+    private BufferedImage[] hitAnimation;
+    private BufferedImage[] jumpAnimation;
     private int animationTick = 30;
     private int animationIndex = 30;
     private int animationSpeed = 15;
+    private int playerAction = IDLE;
 
     /**
      * Constructor de la clase GamePanel.
@@ -38,6 +45,10 @@ public class GamePanel extends JPanel {
         // Importar la imagen
         loadAnimation();
         loadRunninAnimation();
+        loadAttackJumpAnimation();
+        loadAttackAnimation();
+        loadHitAnimation();
+        loadJumpAnimation();
 
         // Establecer el tamaño del panel
         setPanelSize();
@@ -78,6 +89,78 @@ public class GamePanel extends JPanel {
             for (int i = 0; i < imageFiles.length; i++) {
                 try {
                     runningAnimation[i] = ImageIO.read(imageFiles[i]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void loadAttackJumpAnimation() {
+        File folder = new File("2D Game\\resources\\idle-attack-jump"); // Ruta del directorio donde se encuentran las
+        // imágenes
+        File[] imageFiles = folder.listFiles();
+
+        if (imageFiles != null) {
+            attackJumpAnimation = new BufferedImage[imageFiles.length];
+
+            for (int i = 0; i < imageFiles.length; i++) {
+                try {
+                    attackJumpAnimation[i] = ImageIO.read(imageFiles[i]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void loadAttackAnimation() {
+        File folder = new File("2D Game\\resources\\idle-attacking"); // Ruta del directorio donde se encuentran las
+        // imágenes
+        File[] imageFiles = folder.listFiles();
+
+        if (imageFiles != null) {
+            attackAnimation = new BufferedImage[imageFiles.length];
+
+            for (int i = 0; i < imageFiles.length; i++) {
+                try {
+                    attackAnimation[i] = ImageIO.read(imageFiles[i]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void loadHitAnimation() {
+        File folder = new File("2D Game\\resources\\idle-hit"); // Ruta del directorio donde se encuentran las
+        // imágenes
+        File[] imageFiles = folder.listFiles();
+
+        if (imageFiles != null) {
+            hitAnimation = new BufferedImage[imageFiles.length];
+
+            for (int i = 0; i < imageFiles.length; i++) {
+                try {
+                    hitAnimation[i] = ImageIO.read(imageFiles[i]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void loadJumpAnimation() {
+        File folder = new File("2D Game\\resources\\idle-jumping"); // Ruta del directorio donde se encuentran las
+        // imágenes
+        File[] imageFiles = folder.listFiles();
+
+        if (imageFiles != null) {
+            jumpAnimation = new BufferedImage[imageFiles.length];
+
+            for (int i = 0; i < imageFiles.length; i++) {
+                try {
+                    jumpAnimation[i] = ImageIO.read(imageFiles[i]);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -128,10 +211,7 @@ public class GamePanel extends JPanel {
         animationTick++;
         if (animationTick >= animationSpeed) {
             animationTick = 0;
-            animationIndex++;
-            if (animationIndex >= runningAnimation.length) {
-                animationIndex = 0;
-            }
+            animationIndex = (animationIndex + 1) % jumpAnimation.length;
         }
     }
 
@@ -150,7 +230,7 @@ public class GamePanel extends JPanel {
         // 80, null);
 
         // Running Animation
-        g.drawImage(runningAnimation[animationIndex], (int) xDelta, (int) yDelta, 128, 80, null);
+        g.drawImage(jumpAnimation[animationIndex], (int) xDelta, (int) yDelta, 128, 180, null);
 
     }
 }
