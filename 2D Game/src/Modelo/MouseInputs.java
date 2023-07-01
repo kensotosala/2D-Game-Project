@@ -41,8 +41,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        // Actualiza la posición del rectángulo en el panel de juego.
-        gamePanel.setRectPos(e.getX(), e.getY());
+
     }
 
     /**

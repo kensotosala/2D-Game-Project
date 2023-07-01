@@ -7,10 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
 import Modelo.KeyboardInputs;
 import Modelo.MouseInputs;
 
-import static Modelo.Utilities.Constants.PlayerConstants.*;
+import static Modelo.Utilities.Constants.Directions.*;
 
 /**
  * La clase GamePanel representa un panel de juego en el que se dibuja una
@@ -30,7 +31,9 @@ public class GamePanel extends JPanel {
     private int animationTick = 30;
     private int animationIndex = 30;
     private int animationSpeed = 15;
-    private int playerAction = IDLE;
+    private int playerDirection = -1;
+    private boolean moving = false;
+    private BufferedImage playerAction; // Cambiado el tipo de variable
 
     /**
      * Constructor de la clase GamePanel.
@@ -178,40 +181,48 @@ public class GamePanel extends JPanel {
         setMaximumSize(size);
     }
 
-    /**
-     * Cambia el valor de desplazamiento en el eje x.
-     * 
-     * @param value El valor a sumar al desplazamiento actual en el eje x.
-     */
-    public void changeXDelta(int value) {
-        this.xDelta += value;
-    }
-
-    /**
-     * Cambia el valor de desplazamiento en el eje y.
-     * 
-     * @param value El valor a sumar al desplazamiento actual en el eje y.
-     */
-    public void changeYDelta(int value) {
-        this.yDelta += value;
-    }
-
-    /**
-     * Establece la posición del rectángulo.
-     * 
-     * @param x La coordenada x de la posición del rectángulo.
-     * @param y La coordenada y de la posición del rectángulo.
-     */
-    public void setRectPos(int x, int y) {
-        this.xDelta = x;
-        this.yDelta = y;
-    }
-
     private void updateAnimationTick() {
         animationTick++;
         if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex = (animationIndex + 1) % jumpAnimation.length;
+        }
+    }
+
+    public void setDirection(int direction) {
+        this.playerDirection = direction;
+        moving = true;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public void setAnimation() {
+
+        if (moving) {
+            playerAction = runningAnimation[animationIndex];
+        } else {
+            playerAction = idleAnimation[animationIndex];
+        }
+    }
+
+    private void updatePos() {
+        if (moving) {
+            switch (playerDirection) {
+                case LEFT:
+                    xDelta -= 5;
+                    break;
+                case UP:
+                    yDelta -= 5;
+                    break;
+                case RIGHT:
+                    xDelta += 5;
+                    break;
+                case DOWN:
+                    yDelta += 5;
+                    break;
+            }
         }
     }
 
@@ -224,13 +235,11 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
 
         updateAnimationTick();
-
-        // Dibujar la subimagen en el contexto gráfico
-        // g.drawImage(idleAnimation[animationIndex], (int) xDelta, (int) yDelta, 128,
-        // 80, null);
+        setAnimation();
+        updatePos();
 
         // Running Animation
-        g.drawImage(jumpAnimation[animationIndex], (int) xDelta, (int) yDelta, 128, 180, null);
+        g.drawImage(playerAction, (int) xDelta, (int) yDelta, 128, 180, null);
 
     }
 }
