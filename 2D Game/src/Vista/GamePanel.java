@@ -226,17 +226,16 @@ public class GamePanel extends JPanel {
         }
     }
 
-    /**
-     * Sobrescribe el método paintComponent para dibujar la subimagen en el panel.
-     * 
-     * @param g El contexto gráfico en el que se dibujará la subimagen.
-     */
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
+    public void updateGame() {
         updateAnimationTick();
         setAnimation();
         updatePos();
+    }
+
+    // Sobrescribe el método paintComponent para dibujar la subimagen en el panel.
+    // @param g El contexto gráfico en el que se dibujará la subimagen.
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         // Running Animation
         g.drawImage(playerAction, (int) xDelta, (int) yDelta, 128, 180, null);

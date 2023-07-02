@@ -11,6 +11,7 @@ public class Game implements Runnable {
     private GamePanel gamePanel;
     private Thread gameThread;
     private final int FPS_SET = 120;
+    private final int UPS_SET = 200;
 
     // Constructor
     public Game() throws IOException {
@@ -31,33 +32,41 @@ public class Game implements Runnable {
         gameThread.start();
     }
 
+    public void update() {
+        gamePanel.updateGame();
+    }
+
     @Override
     public void run() {
         // Calcula el tiempo máximo permitido para cada cuadro
         double timePerFrame = 1000000000.0 / FPS_SET;
+        double timePerUpdate = 1000000000.0 / UPS_SET;
 
-        // Obtiene el tiempo del último cuadro
-        long lastFrame = System.nanoTime();
-
-        // Variables para el cálculo de los FPS
-        long now = System.nanoTime();
+        long previousTime = System.nanoTime();
         int frames = 0;
+        int updates = 0;
         long lastCheck = System.currentTimeMillis();
+
+        double deltaU = 0;
+        double deltaF = 0;
 
         // Bucle principal del juego
         while (true) {
-            now = System.nanoTime();
+            long currentTime = System.nanoTime();
+            deltaU += (currentTime - previousTime) / timePerUpdate;
+            deltaF += (currentTime - previousTime) / timePerFrame;
+            previousTime = currentTime;
 
-            // Comprueba si ha pasado el tiempo suficiente para renderizar un nuevo cuadro
-            if (System.nanoTime() - lastFrame >= timePerFrame) {
-                // Vuelve a pintar el panel de juego
+            if (deltaU >= 1) {
+                update();
+                updates++;
+                deltaU--;
+            }
+
+            if (deltaF >= 1) {
                 gamePanel.repaint();
-
-                // Actualiza el tiempo del último cuadro
-                lastFrame = now;
-
-                // Incrementa el contador de cuadros
                 frames++;
+                deltaF--;
             }
 
             // Comprueba si ha pasado un segundo para calcular los FPS
@@ -65,10 +74,11 @@ public class Game implements Runnable {
                 lastCheck = System.currentTimeMillis();
 
                 // Imprime los FPS en la consola
-                System.out.println("FPS: " + frames);
+                System.out.println("FPS: " + frames + " | UPS: " + updates);
 
                 // Reinicia el contador de cuadros
                 frames = 0;
+                updates = 0;
             }
         }
     }
