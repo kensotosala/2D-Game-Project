@@ -1,7 +1,9 @@
 package Controlador;
 
+import java.awt.Graphics;
 import java.io.IOException;
 
+import Modelo.Player;
 import Vista.GamePanel;
 import Vista.GameWindow;
 
@@ -13,10 +15,13 @@ public class Game implements Runnable {
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
 
+    private Player player;
+
     // Constructor
     public Game() throws IOException {
+        initClasses();
         // Inicializa el panel de juego y la ventana del juego
-        gamePanel = new GamePanel();
+        gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
 
         // Establece el enfoque en el panel de juego
@@ -24,6 +29,11 @@ public class Game implements Runnable {
 
         // Inicia el bucle principal del juego
         startGameLoop();
+
+    }
+
+    private void initClasses() {
+        player = new Player(200, 200);
     }
 
     // Inicia el hilo de ejecución del juego
@@ -33,7 +43,11 @@ public class Game implements Runnable {
     }
 
     public void update() {
-        gamePanel.updateGame();
+        player.update();
+    }
+
+    public void render(Graphics g) {
+        player.render(g);
     }
 
     @Override
@@ -81,5 +95,13 @@ public class Game implements Runnable {
                 updates = 0;
             }
         }
+    }
+
+    public void windowFocusLost() {
+        player.resetDirBooleans();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
