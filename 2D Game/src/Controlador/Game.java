@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.io.IOException;
 
 import Modelo.Player;
+import Modelo.Levels.LevelManager;
 import Vista.GamePanel;
 import Vista.GameWindow;
 
@@ -16,6 +17,7 @@ public class Game implements Runnable {
     private final int UPS_SET = 200;
 
     private Player player;
+    private LevelManager levelManager;
 
     public final static int TILES_DEFAULT_SIZE = 32;
     public final static float SCALE = 1.5f;
@@ -42,6 +44,7 @@ public class Game implements Runnable {
 
     private void initClasses() {
         player = new Player(200, 200);
+        levelManager = new LevelManager(this, "2D Game/resources/Platforms", GAME_WIDTH, GAME_HEIGHT);
     }
 
     // Inicia el hilo de ejecución del juego
@@ -52,9 +55,11 @@ public class Game implements Runnable {
 
     public void update() {
         player.update();
+        levelManager.update();
     }
 
     public void render(Graphics g) {
+        levelManager.draw(g);
         player.render(g);
     }
 

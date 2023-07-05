@@ -13,8 +13,6 @@ public class LoadSave {
     public static BufferedImage[] hitAnimation;
     public static BufferedImage[] jumpAnimation;
 
-    public static final String LEVEL_ATLAS = "";
-
     public BufferedImage[] GetIdleAnimation() {
         File idleFolder = new File("2D Game\\resources\\Idle");
         File[] idleImageFiles = idleFolder.listFiles();
