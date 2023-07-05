@@ -2,17 +2,13 @@ package Vista;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import Controlador.Game;
 import Modelo.KeyboardInputs;
 import Modelo.MouseInputs;
-
-import static Modelo.Utilities.Constants.Directions.*;
+import static Controlador.Game.GAME_WIDTH;
+import static Controlador.Game.GAME_HEIGHT;
 
 public class GamePanel extends JPanel {
 
@@ -38,10 +34,11 @@ public class GamePanel extends JPanel {
     }
 
     private void setPanelSize() {
-        Dimension size = new Dimension(1280, 800);
-        setMinimumSize(size);
+        Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT);
         setPreferredSize(size);
-        setMaximumSize(size);
+        System.out.println("GAME_WIDTH: " + GAME_WIDTH);
+        System.out.println("GAME_HEIGHT: " + GAME_HEIGHT);
+
     }
 
     public void updateGame() {

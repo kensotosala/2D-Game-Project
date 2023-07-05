@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
+import Modelo.Utilities.LoadSave;
+
 public class Player extends Entity {
 
     private BufferedImage[] idleAnimation;
@@ -34,7 +36,7 @@ public class Player extends Entity {
     public Player(float x, float y) {
         super(x, y);
         loadAnimation();
-        loadRunninAnimation();
+        loadRunningAnimation();
         loadAttackJumpAnimation();
         loadAttackAnimation();
         loadHitAnimation();
@@ -48,9 +50,11 @@ public class Player extends Entity {
     }
 
     public void render(Graphics g) {
-        // Running Animation
-        g.drawImage(playerAction, (int) x, (int) y, 128, 180, null);
-
+        if (moving) {
+            g.drawImage(playerAction, (int) x, (int) y, 128, 180, null);
+        } else {
+            g.drawImage(idleAnimation[0], (int) x, (int) y, 128, 180, null);
+        }
     }
 
     private void updateAnimationTick() {
@@ -66,11 +70,11 @@ public class Player extends Entity {
         BufferedImage startAnimation = playerAction;
 
         if (moving) {
-            playerAction = runningAnimation[animationIndex];
+            playerAction = runningAnimation[animationIndex % runningAnimation.length];
         } else if (attacking) {
-            playerAction = attackAnimation[animationIndex];
+            playerAction = attackAnimation[animationIndex % attackAnimation.length];
         } else {
-            playerAction = idleAnimation[animationIndex];
+            playerAction = idleAnimation[animationIndex % idleAnimation.length];
         }
 
         if (!playerAction.equals(startAnimation)) {
@@ -104,92 +108,28 @@ public class Player extends Entity {
     }
 
     private void loadAnimation() {
-        File folder = new File("2D Game\\resources\\Idle"); // Ruta del directorio donde se encuentran las imágenes
-        File[] imageFiles = folder.listFiles();
-
-        if (imageFiles != null) {
-            idleAnimation = new BufferedImage[imageFiles.length];
-
-            for (int i = 0; i < imageFiles.length; i++) {
-                try {
-                    idleAnimation[i] = ImageIO.read(imageFiles[i]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        LoadSave loader = new LoadSave();
+        idleAnimation = loader.GetIdleAnimation();
     }
 
-    public void loadRunninAnimation() {
-        File folder = new File("2D Game\\resources\\idle-running"); // Ruta del directorio donde se encuentran las
-                                                                    // imágenes
-        File[] imageFiles = folder.listFiles();
-
-        if (imageFiles != null) {
-            runningAnimation = new BufferedImage[imageFiles.length];
-
-            for (int i = 0; i < imageFiles.length; i++) {
-                try {
-                    runningAnimation[i] = ImageIO.read(imageFiles[i]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    private void loadRunningAnimation() {
+        LoadSave loader = new LoadSave();
+        runningAnimation = loader.GetRunningAnimation();
     }
 
     public void loadAttackJumpAnimation() {
-        File folder = new File("2D Game\\resources\\idle-attack-jump"); // Ruta del directorio donde se encuentran las
-        // imágenes
-        File[] imageFiles = folder.listFiles();
-
-        if (imageFiles != null) {
-            attackJumpAnimation = new BufferedImage[imageFiles.length];
-
-            for (int i = 0; i < imageFiles.length; i++) {
-                try {
-                    attackJumpAnimation[i] = ImageIO.read(imageFiles[i]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        LoadSave loader = new LoadSave();
+        attackJumpAnimation = loader.GetPlayerAtlas();
     }
 
     public void loadAttackAnimation() {
-        File folder = new File("2D Game\\resources\\idle-attacking"); // Ruta del directorio donde se encuentran las
-        // imágenes
-        File[] imageFiles = folder.listFiles();
-
-        if (imageFiles != null) {
-            attackAnimation = new BufferedImage[imageFiles.length];
-
-            for (int i = 0; i < imageFiles.length; i++) {
-                try {
-                    attackAnimation[i] = ImageIO.read(imageFiles[i]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        LoadSave loader = new LoadSave();
+        attackAnimation = loader.GetPlayerAtlas();
     }
 
     public void loadHitAnimation() {
-        File folder = new File("2D Game\\resources\\idle-hit"); // Ruta del directorio donde se encuentran las
-        // imágenes
-        File[] imageFiles = folder.listFiles();
-
-        if (imageFiles != null) {
-            hitAnimation = new BufferedImage[imageFiles.length];
-
-            for (int i = 0; i < imageFiles.length; i++) {
-                try {
-                    hitAnimation[i] = ImageIO.read(imageFiles[i]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        LoadSave loader = new LoadSave();
+        hitAnimation = loader.GetPlayerAtlas();
     }
 
     public void loadJumpAnimation() {
