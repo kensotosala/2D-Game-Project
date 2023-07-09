@@ -43,7 +43,7 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        player = new Player(200, 200);
+        player = new Player(100, 100);
         levelManager = new LevelManager(this, "2D Game/resources/Platforms", GAME_WIDTH, GAME_HEIGHT);
     }
 

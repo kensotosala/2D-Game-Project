@@ -1,12 +1,10 @@
 package Modelo.Levels;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
 import Controlador.Game;
@@ -14,7 +12,8 @@ import Controlador.Game;
 public class LevelManager {
     private Game game;
     private BufferedImage levelSprite;
-    private BufferedImage[] outsideSprites;
+    private BufferedImage floorPlatformSprite;
+    private BufferedImage[] airPlatformSprites;
     private int GAME_WIDTH;
     private int GAME_HEIGHT;
 
@@ -24,31 +23,39 @@ public class LevelManager {
         this.GAME_HEIGHT = gameHeight;
         try {
             levelSprite = ImageIO.read(new File("2D Game/resources/Background/background-zone-1.png"));
-            int newWidth = 1248 /* nuevo ancho deseado */;
-            int newHeight = 672 /* nueva altura deseada */;
+            int newWidth = 1248; /* nuevo ancho deseado */
+            int newHeight = 672; /* nueva altura deseada */
             levelSprite = scaleImage(levelSprite, newWidth, newHeight);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        outsideSprites = loadOutsideSprites(spritesDirectory);
+        floorPlatformSprite = loadSprite(spritesDirectory + "/Platforms/floor-platform.png");
+        airPlatformSprites = loadAirPlatformSprites(spritesDirectory + "/Platforms/air-platform");
     }
 
-    private BufferedImage[] loadOutsideSprites(String spritesDirectory) {
+    private BufferedImage loadSprite(String spritePath) {
+        BufferedImage sprite = null;
+        try {
+            sprite = ImageIO.read(new File(spritePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sprite;
+    }
+
+    private BufferedImage[] loadAirPlatformSprites(String spritesDirectory) {
         File folder = new File(spritesDirectory);
         File[] spriteFiles = folder.listFiles();
 
+        if (spriteFiles == null) {
+            System.out.println("Sprite files not found.");
+            return new BufferedImage[0];
+        }
+
         BufferedImage[] sprites = new BufferedImage[spriteFiles.length];
 
-        try {
-            for (int i = 0; i < spriteFiles.length; i++) {
-                BufferedImage originalImage = ImageIO.read(spriteFiles[i]);
-                int newWidth = 100 /* nuevo ancho deseado */;
-                int newHeight = 100 /* nueva altura deseada */;
-                Image scaledImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
-                sprites[i] = toBufferedImage(scaledImage);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (int i = 0; i < spriteFiles.length; i++) {
+            sprites[i] = loadSprite(spriteFiles[i].getPath());
         }
 
         return sprites;
@@ -58,59 +65,46 @@ public class LevelManager {
         Image scaledImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D g2d = resizedImage.createGraphics();
-        g2d.drawImage(scaledImage, 0, 0, null);
-        g2d.dispose();
-
-        return resizedImage;
-    }
-
-    private static BufferedImage toBufferedImage(Image img) {
-        if (img instanceof BufferedImage) {
-            return (BufferedImage) img;
-        }
-
-        // Crea una nueva imagen BufferedImage con el mismo ancho y alto
-        BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null),
-                BufferedImage.TYPE_INT_ARGB);
-
-        // Dibuja la imagen en el BufferedImage
-        Graphics g = bufferedImage.createGraphics();
-        g.drawImage(img, 0, 0, null);
+        Graphics g = resizedImage.getGraphics();
+        g.drawImage(scaledImage, 0, 0, null);
         g.dispose();
 
-        return bufferedImage;
+        return resizedImage;
     }
 
     public void draw(Graphics g) {
         g.drawImage(levelSprite, 0, 0, null);
 
-        // Dibujar las imágenes cargadas en outsideSprites
-        for (int i = 0; i < outsideSprites.length; i++) {
-            int x;
-            int y;
+        // Dibujar el suelo con la plataforma
+        if (floorPlatformSprite != null) {
+            int platformWidth = floorPlatformSprite.getWidth();
+            int platformHeight = floorPlatformSprite.getHeight();
+            int numPlatforms = Math.min(5, GAME_WIDTH / platformWidth);
 
-            // Posicionar las plataformas en la parte inferior de la ventana
-            if (i == 3) {
-                int platformWidth = outsideSprites[i].getWidth();
-                int platformHeight = outsideSprites[i].getHeight();
-                int numPlatforms = 5; // Número de plataformas en la fila
+            int horizontalSpacing = (GAME_WIDTH - (numPlatforms * platformWidth)) / (numPlatforms + 1);
 
-                // Calcular el espacio horizontal entre las plataformas
-                int horizontalSpacing = (GAME_WIDTH - (numPlatforms * platformWidth)) / (numPlatforms + 1);
+            for (int j = 0; j < numPlatforms; j++) {
+                int x = (j + 1) * horizontalSpacing + j * platformWidth;
+                int y = GAME_HEIGHT - platformHeight;
 
-                // Posicionar las plataformas en la parte inferior de la ventana
-                for (int j = 0; j < numPlatforms; j++) {
-                    x = (j + 1) * horizontalSpacing + j * platformWidth;
-                    y = GAME_HEIGHT - platformHeight - 1; // Espacio entre el suelo y las plataformas
+                g.drawImage(floorPlatformSprite, x, y, null);
+            }
+        }
 
-                    g.drawImage(outsideSprites[i], x, y, null);
-                }
-            } else {
-                x = 100;
-                y = 100;
+        // Dibujar las plataformas en el aire
+        if (airPlatformSprites != null && airPlatformSprites.length > 0) {
+            int airPlatformWidth = airPlatformSprites[0].getWidth();
+            int airPlatformHeight = airPlatformSprites[0].getHeight();
+            int numAirPlatforms = Math.min(3, GAME_WIDTH / airPlatformWidth);
 
-                g.drawImage(outsideSprites[i], x, y, null);
+            int horizontalSpacing = (GAME_WIDTH - (numAirPlatforms * airPlatformWidth)) / (numAirPlatforms + 1);
+            int verticalPosition = GAME_HEIGHT / 2 - airPlatformHeight / 2;
+
+            for (int j = 0; j < numAirPlatforms; j++) {
+                int x = (j + 1) * horizontalSpacing + j * airPlatformWidth;
+                int y = verticalPosition;
+
+                g.drawImage(airPlatformSprites[j], x, y, null);
             }
         }
     }
@@ -119,3 +113,6 @@ public class LevelManager {
 
     }
 }
+
+// Quedamos en que las plataformas no se dibujan y tenemos que hacer un suelo y
+// poner varias plataformas en el aire.

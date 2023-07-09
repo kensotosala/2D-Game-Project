@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import Controlador.Game;
+
 public class LoadSave {
     public static BufferedImage[] idleAnimation;
     public static BufferedImage[] runningAnimation;
@@ -85,4 +87,9 @@ public class LoadSave {
 
         return playerAtlas;
     }
+
+    // public static int[][] GetLevelData() {
+    //     int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
+    //     BufferedImage img = 
+    // }
 }
