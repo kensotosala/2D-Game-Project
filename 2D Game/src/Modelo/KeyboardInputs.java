@@ -15,43 +15,47 @@ public class KeyboardInputs implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         Player player = gamePanel.getGame().getPlayer();
-        int keyCode = e.getKeyCode();
 
-        if (keyCode == KeyEvent.VK_W) {
-            player.setUp(true);
-        } else if (keyCode == KeyEvent.VK_A) {
-            player.setLeft(true);
-        } else if (keyCode == KeyEvent.VK_S) {
-            player.setDown(true);
-        } else if (keyCode == KeyEvent.VK_D) {
-            player.setRight(true);
-        } else if (keyCode == KeyEvent.VK_SPACE) {
-            player.setJumping(true);
-            player.setJumpSpeed(5.0f); // Asigna la velocidad de salto adecuada
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_A:
+                player.setLeft(true);
+                player.setRight(false);
+                player.setMoving(true);
+                player.setVelocityX(-player.getPlayerSpeed()); // Actualizar la velocidad hacia la izquierda
+                break;
+            case KeyEvent.VK_D:
+                player.setRight(true);
+                player.setLeft(false);
+                player.setMoving(true);
+                player.setVelocityX(player.getPlayerSpeed()); // Actualizar la velocidad hacia la derecha
+                break;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         Player player = gamePanel.getGame().getPlayer();
-        int keyCode = e.getKeyCode();
 
-        if (keyCode == KeyEvent.VK_W) {
-            player.setUp(false);
-        } else if (keyCode == KeyEvent.VK_A) {
-            player.setLeft(false);
-        } else if (keyCode == KeyEvent.VK_S) {
-            player.setDown(false);
-        } else if (keyCode == KeyEvent.VK_D) {
-            player.setRight(false);
-        } else if (keyCode == KeyEvent.VK_SPACE) {
-            player.setJumping(false);
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_A:
+                player.setLeft(false);
+                if (!player.isRight()) {
+                    player.setMoving(false);
+                    player.setVelocityX(0.0f);
+                }
+                break;
+            case KeyEvent.VK_D:
+                player.setRight(false);
+                if (!player.isLeft()) {
+                    player.setMoving(false);
+                    player.setVelocityX(0.0f);
+                }
+                break;
         }
     }
 }
