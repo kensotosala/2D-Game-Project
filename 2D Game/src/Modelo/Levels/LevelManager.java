@@ -6,9 +6,13 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.imageio.ImageIO;
 
 import Controlador.Game;
+import Modelo.Platform;
 import Modelo.Player;
 
 public class LevelManager {
@@ -18,6 +22,8 @@ public class LevelManager {
     private BufferedImage[] airPlatformSprites;
     private int GAME_WIDTH;
     private int GAME_HEIGHT;
+
+    private List<Platform> platforms;
 
     public LevelManager(Game game, String spritesDirectory, int gameWidth, int gameHeight) {
         this.game = game;
@@ -33,6 +39,20 @@ public class LevelManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Crear y cargar las plataformas
+        platforms = new ArrayList<>();
+        int x1 = 100; // Valor deseado para la coordenada x de la primera plataforma
+        int y1 = 200; // Valor deseado para la coordenada y de la primera plataforma
+        int width1 = 100; // Valor deseado para el ancho de la primera plataforma
+        int height1 = 20; // Valor deseado para la altura de la primera plataforma
+        platforms.add(new Platform(x1, y1, width1, height1));
+
+        int x2 = 300; // Valor deseado para la coordenada x de la segunda plataforma
+        int y2 = 400; // Valor deseado para la coordenada y de la segunda plataforma
+        int width2 = 150; // Valor deseado para el ancho de la segunda plataforma
+        int height2 = 20; // Valor deseado para la altura de la segunda plataforma
+        platforms.add(new Platform(x2, y2, width2, height2));
     }
 
     private BufferedImage scaleImage(BufferedImage originalImage, int newWidth, int newHeight) {
@@ -128,5 +148,9 @@ public class LevelManager {
 
     public void update() {
         // Código de actualización del nivel
+    }
+
+    public List<Platform> getPlatforms() {
+        return platforms;
     }
 }

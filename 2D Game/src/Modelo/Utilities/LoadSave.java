@@ -3,9 +3,10 @@ package Modelo.Utilities;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.ArrayList;
+import java.util.List;
 
-import Controlador.Game;
+import javax.imageio.ImageIO;
 
 public class LoadSave {
     public static BufferedImage[] idleAnimation;
@@ -15,81 +16,87 @@ public class LoadSave {
     public static BufferedImage[] hitAnimation;
     public static BufferedImage[] jumpAnimation;
 
-    public BufferedImage[] GetIdleAnimation() {
-        File idleFolder = new File("2D Game\\resources\\Idle");
-        File[] idleImageFiles = idleFolder.listFiles();
-
-        if (idleImageFiles != null) {
-            idleAnimation = new BufferedImage[idleImageFiles.length];
-
-            for (int i = 0; i < idleImageFiles.length; i++) {
-                try {
-                    idleAnimation[i] = ImageIO.read(idleImageFiles[i]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+    public BufferedImage[] getIdleAnimation() {
+        if (idleAnimation == null) {
+            List<BufferedImage> frames = loadFramesFromFolder("2D Game/resources/Idle");
+            idleAnimation = frames.toArray(new BufferedImage[0]);
         }
-
         return idleAnimation;
     }
 
-    public BufferedImage[] GetRunningAnimation() {
-        File runningFolder = new File("2D Game\\resources\\idle-running");
-        File[] runningImageFiles = runningFolder.listFiles();
+    public BufferedImage[] getRunningAnimation() {
+        if (runningAnimation == null) {
+            List<BufferedImage> frames = loadFramesFromFolder("2D Game/resources/idle-running");
+            runningAnimation = frames.toArray(new BufferedImage[0]);
+        }
+        return runningAnimation;
+    }
 
-        if (runningImageFiles != null) {
-            runningAnimation = new BufferedImage[runningImageFiles.length];
+    public BufferedImage[] getAttackJumpAnimation() {
+        if (attackJumpAnimation == null) {
+            attackJumpAnimation = GetPlayerAtlas();
+        }
+        return attackJumpAnimation;
+    }
 
-            for (int i = 0; i < runningImageFiles.length; i++) {
+    public BufferedImage[] getAttackAnimation() {
+        if (attackAnimation == null) {
+            attackAnimation = GetPlayerAtlas();
+        }
+        return attackAnimation;
+    }
+
+    public BufferedImage[] getHitAnimation() {
+        if (hitAnimation == null) {
+            hitAnimation = GetPlayerAtlas();
+        }
+        return hitAnimation;
+    }
+
+    public BufferedImage[] getJumpAnimation() {
+        if (jumpAnimation == null) {
+            List<BufferedImage> frames = loadFramesFromFolder("2D Game/resources/idle-jumping");
+            jumpAnimation = frames.toArray(new BufferedImage[0]);
+        }
+        return jumpAnimation;
+    }
+
+    private BufferedImage[] GetPlayerAtlas() {
+        BufferedImage[] idle = getIdleAnimation();
+        BufferedImage[] running = getRunningAnimation();
+
+        List<BufferedImage> allFrames = new ArrayList<>();
+        if (idle != null) {
+            for (BufferedImage frame : idle) {
+                allFrames.add(frame);
+            }
+        }
+        if (running != null) {
+            for (BufferedImage frame : running) {
+                allFrames.add(frame);
+            }
+        }
+        // Agregar otras animaciones...
+
+        return allFrames.toArray(new BufferedImage[0]);
+    }
+
+    private List<BufferedImage> loadFramesFromFolder(String folderPath) {
+        List<BufferedImage> frames = new ArrayList<>();
+        File folder = new File(folderPath);
+        File[] imageFiles = folder.listFiles();
+
+        if (imageFiles != null) {
+            for (File file : imageFiles) {
                 try {
-                    runningAnimation[i] = ImageIO.read(runningImageFiles[i]);
+                    BufferedImage frame = ImageIO.read(file);
+                    frames.add(frame);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        return runningAnimation;
+        return frames;
     }
-
-    // Otros métodos para cargar las demás animaciones...
-
-    public BufferedImage[] GetPlayerAtlas() {
-        BufferedImage[] idle = GetIdleAnimation();
-        BufferedImage[] running = GetRunningAnimation();
-        // Carga de otras animaciones...
-
-        // Combina todas las animaciones en una sola matriz
-        BufferedImage[][] allAnimations = {
-                idle,
-                running,
-                // Otras animaciones...
-        };
-
-        int totalFrames = 0;
-
-        for (BufferedImage[] animation : allAnimations) {
-            if (animation != null) {
-                totalFrames += animation.length;
-            }
-        }
-
-        BufferedImage[] playerAtlas = new BufferedImage[totalFrames];
-        int frameIndex = 0;
-
-        for (BufferedImage[] animation : allAnimations) {
-            if (animation != null) {
-                System.arraycopy(animation, 0, playerAtlas, frameIndex, animation.length);
-                frameIndex += animation.length;
-            }
-        }
-
-        return playerAtlas;
-    }
-
-    // public static int[][] GetLevelData() {
-    //     int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
-    //     BufferedImage img = 
-    // }
 }

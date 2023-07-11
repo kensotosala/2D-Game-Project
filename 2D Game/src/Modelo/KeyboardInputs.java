@@ -2,7 +2,6 @@ package Modelo;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import static Modelo.Utilities.Constants.Directions.*;
 
 import Vista.GamePanel;
 
@@ -21,43 +20,38 @@ public class KeyboardInputs implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-                gamePanel.getGame().getPlayer().setUp(true);
-                break;
-            case KeyEvent.VK_A:
-                gamePanel.getGame().getPlayer().setLeft(true);
-                break;
-            case KeyEvent.VK_S:
-                gamePanel.getGame().getPlayer().setDown(true);
-                break;
-            case KeyEvent.VK_D:
-                gamePanel.getGame().getPlayer().setRight(true);
-                break;
-            case KeyEvent.VK_SPACE:
-                gamePanel.getGame().getPlayer().setJumping(true); // Establecer jumping en true
-                break;
+        Player player = gamePanel.getGame().getPlayer();
+        int keyCode = e.getKeyCode();
+
+        if (keyCode == KeyEvent.VK_W) {
+            player.setUp(true);
+        } else if (keyCode == KeyEvent.VK_A) {
+            player.setLeft(true);
+        } else if (keyCode == KeyEvent.VK_S) {
+            player.setDown(true);
+        } else if (keyCode == KeyEvent.VK_D) {
+            player.setRight(true);
+        } else if (keyCode == KeyEvent.VK_SPACE) {
+            player.setJumping(true);
+            player.setJumpSpeed(5.0f); // Asigna la velocidad de salto adecuada
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-                gamePanel.getGame().getPlayer().setUp(false);
-                break;
-            case KeyEvent.VK_A:
-                gamePanel.getGame().getPlayer().setLeft(false);
-                break;
-            case KeyEvent.VK_S:
-                gamePanel.getGame().getPlayer().setDown(false);
-                break;
-            case KeyEvent.VK_D:
-                gamePanel.getGame().getPlayer().setRight(false);
-                break;
-            case KeyEvent.VK_SPACE:
-                gamePanel.getGame().getPlayer().setJumping(false); // Establecer jumping en false
-                break;
+        Player player = gamePanel.getGame().getPlayer();
+        int keyCode = e.getKeyCode();
+
+        if (keyCode == KeyEvent.VK_W) {
+            player.setUp(false);
+        } else if (keyCode == KeyEvent.VK_A) {
+            player.setLeft(false);
+        } else if (keyCode == KeyEvent.VK_S) {
+            player.setDown(false);
+        } else if (keyCode == KeyEvent.VK_D) {
+            player.setRight(false);
+        } else if (keyCode == KeyEvent.VK_SPACE) {
+            player.setJumping(false);
         }
     }
 }

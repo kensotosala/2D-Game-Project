@@ -5,207 +5,180 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
+import java.util.List;
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
 
     private BufferedImage[] idleAnimation;
     private BufferedImage[] runningAnimation;
-    private BufferedImage[] attackJumpAnimation;
-    private BufferedImage[] attackAnimation;
-    private BufferedImage[] hitAnimation;
-    private BufferedImage[] jumpAnimation;
-    private int animationTick;
-    private int animationIndex;
-    private int animationSpeed;
     private boolean moving;
     private boolean attacking;
-    private boolean jumping;
-    private boolean spacePressed;
-    private BufferedImage playerAction;
-    private boolean left;
-    private boolean right;
-    private boolean up;
-    private boolean down;
     private float playerSpeed;
-    private static final float GRAVITY = 0.3f; // Constante de gravedad
-    private float yVelocity; // Velocidad vertical del jugador
+    private static final float GRAVITY = 0.3f;
+    private float velocityX;
+    private float velocityY;
+    private List<Platform> platforms;
+    private CollisionManager collisionManager;
+    private boolean up;
+    private boolean left;
+    private boolean down;
+    private boolean right;
+    private boolean jumping;
+    private float jumpSpeed;
 
-    public Player(float x, float y) {
+    public Player(int x, int y, List<Platform> platforms) {
         super(x, y);
+        this.platforms = platforms;
         loadAnimations();
-        animationTick = 0;
-        animationIndex = 0;
-        animationSpeed = 15;
         moving = false;
         attacking = false;
-        jumping = false;
-        spacePressed = false;
         playerSpeed = 2.0f;
+        collisionManager = new CollisionManager(platforms);
     }
 
-    public void update(Platform[] platforms) {
-        updatePos();
-        updateAnimationTick();
-        setAnimation();
-
-        // Control de salto
-        if (spacePressed && !jumping) {
-            jumping = true;
-            yVelocity = -10.0f; // Establecer una velocidad vertical negativa para el salto
-            animationTick = 0;
-            animationIndex = 0;
+    public void update() {
+        // Aplicar la gravedad si el jugador no está en el suelo
+        if (!isOnGround()) {
+            velocityY += GRAVITY;
         }
 
-        // Aplicar la gravedad al jugador
-        if (!jumping) {
-            y += yVelocity;
-            yVelocity += GRAVITY;
-        }
+        // Actualizar la posición del jugador
+        x += velocityX;
+        y += velocityY;
 
-        spacePressed = false; // Reiniciar el estado de la tecla de salto
-
-        // Verificar colisiones con las plataformas
+        // Comprobar si el jugador ha colisionado con una plataforma
         for (Platform platform : platforms) {
-            if (CollisionManager.checkCollision(this, platform)) {
+            if (collisionManager.checkCollision(this, platform)) {
                 handleCollision(platform);
             }
         }
+    }
+
+    private boolean isOnGround() {
+        Rectangle playerBounds = getBounds();
+
+        for (Platform platform : platforms) {
+            Rectangle platformBounds = platform.getBounds();
+
+            if (playerBounds.intersects(platformBounds) && velocityY >= 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void handleCollision(Platform platform) {
         Rectangle playerBounds = getBounds();
         Rectangle platformBounds = platform.getBounds();
 
-        // Ajustar la posición del jugador para evitar que se superponga con la
-        // plataforma
         if (playerBounds.y < platformBounds.y) {
             y = platformBounds.y - playerBounds.height;
-            jumping = false;
-            yVelocity = 0.0f;
+            velocityY = 0.0f;
         } else if (playerBounds.y > platformBounds.y) {
             y = platformBounds.y + platformBounds.height;
-            yVelocity = 0.0f;
+            velocityY = 0.0f;
         }
     }
 
     public void render(Graphics g) {
-        int playerWidth = 100; // Nuevo ancho deseado del jugador
-        int playerHeight = 100; // Nuevo alto deseado del jugador
+        int playerWidth = 100;
+        int playerHeight = 100;
 
         if (moving) {
-            g.drawImage(playerAction, (int) x, (int) y, playerWidth, playerHeight, null);
+            // Reproducir animación de correr
+            int frameIndex = (int) (System.currentTimeMillis() / 100) % runningAnimation.length;
+            BufferedImage frame = runningAnimation[frameIndex];
+            g.drawImage(frame, (int) x, (int) y, playerWidth, playerHeight, null);
+        } else if (attacking) {
+            // Reproducir animación de ataque
         } else {
+            // Reproducir animación de reposo
             g.drawImage(idleAnimation[0], (int) x, (int) y, playerWidth, playerHeight, null);
         }
     }
 
-    private void updateAnimationTick() {
-        animationTick++;
-        if (animationTick >= animationSpeed) {
-            animationTick = 0;
-            animationIndex = (animationIndex + 1) % jumpAnimation.length;
-            attacking = false;
-        }
-    }
-
-    public void setAnimation() {
-        BufferedImage startAnimation = playerAction;
-
-        if (moving) {
-            playerAction = runningAnimation[animationIndex % runningAnimation.length];
-        } else if (attacking) {
-            playerAction = attackAnimation[animationIndex % attackAnimation.length];
-        } else {
-            playerAction = idleAnimation[animationIndex % idleAnimation.length];
-        }
-
-        if (!playerAction.equals(startAnimation)) {
-            resetAnimationTick();
-        }
-    }
-
-    private void resetAnimationTick() {
-        animationTick = 0;
-    }
-
-    private void updatePos() {
-        moving = false;
-
-        if (left && !right) {
-            x -= playerSpeed;
-            moving = true;
-        } else if (right && !left) {
-            x += playerSpeed;
-            moving = true;
-        }
-
-        if (up && !down) {
-            y -= playerSpeed;
-            moving = true;
-        } else if (down && !up) {
-            y += playerSpeed;
-            moving = true;
-        }
-    }
-
     private void loadAnimations() {
-        // Cargar las animaciones desde los archivos
-        idleAnimation = loadAnimation("2D Game\\resources\\Idle");
-        runningAnimation = loadAnimation("2D Game\\resources\\idle-running");
-        attackJumpAnimation = loadAnimation("2D Game\\resources\\idle-attack-jump");
-        attackAnimation = loadAnimation("2D Game\\resources\\idle-attacking");
-        hitAnimation = loadAnimation("2D Game\\resources\\idle-hit");
-        jumpAnimation = loadAnimation("2D Game\\resources\\idle-jumping");
+        idleAnimation = loadAnimation("2D Game/resources/Idle");
+        runningAnimation = loadAnimation("2D Game/resources/Running");
     }
 
     private BufferedImage[] loadAnimation(String folderPath) {
-        File folder = new File(folderPath);
-        File[] imageFiles = folder.listFiles();
-        BufferedImage[] animation = new BufferedImage[imageFiles.length];
+        try {
+            File folder = new File(folderPath);
+            File[] imageFiles = folder.listFiles();
 
-        for (int i = 0; i < imageFiles.length; i++) {
-            try {
-                animation[i] = ImageIO.read(imageFiles[i]);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (imageFiles != null && imageFiles.length > 0) {
+                BufferedImage[] animation = new BufferedImage[imageFiles.length];
+
+                for (int i = 0; i < imageFiles.length; i++) {
+                    animation[i] = ImageIO.read(imageFiles[i]);
+                }
+
+                return animation;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return animation;
+        return null;
     }
 
-    public void setJumping(boolean jumping) {
-        this.jumping = jumping;
-    }
-
-    public void setSpacePressed(boolean spacePressed) {
-        this.spacePressed = spacePressed;
-    }
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
-
-    public void setRight(boolean right) {
-        this.right = right;
+    public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, getWidth(), getHeight());
     }
 
     public void setUp(boolean up) {
         this.up = up;
     }
 
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
     public void setDown(boolean down) {
         this.down = down;
     }
 
-    public float getX() {
-        return x;
+    public void setRight(boolean right) {
+        this.right = right;
     }
 
-    public void setX(float x) {
-        this.x = x;
+    public void setJumping(boolean jumping) {
+        this.jumping = jumping;
+    }
+
+    public float getJumpSpeed() {
+        return jumpSpeed;
+    }
+
+    public void setJumpSpeed(float jumpSpeed) {
+        this.jumpSpeed = jumpSpeed;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
+    }
+
+    public int getWidth() {
+        return 100;
+    }
+
+    public int getHeight() {
+        return 100;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public float getPlayerSpeed() {
+        return playerSpeed;
+    }
+
+    public float getX() {
+        return x;
     }
 
     public float getY() {
@@ -216,42 +189,23 @@ public class Player extends Entity {
         this.y = y;
     }
 
-    public boolean isMoving() {
-        return moving;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
-    public boolean isAttacking() {
-        return attacking;
-    }
-
-    public boolean isJumping() {
-        return jumping;
-    }
-
-    public float getPlayerSpeed() {
-        return playerSpeed;
-    }
-
     public void setPlayerSpeed(float playerSpeed) {
         this.playerSpeed = playerSpeed;
     }
 
-    public void setAnimationTick(int animationTick) {
-        this.animationTick = animationTick;
+    public float getVelocityX() {
+        return velocityX;
     }
 
-    public void setAnimationIndex(int animationIndex) {
-        this.animationIndex = animationIndex;
+    public void setVelocityX(float velocityX) {
+        this.velocityX = velocityX;
     }
 
-    private Rectangle getBounds() {
-        return new Rectangle((int) x, (int) y, getWidth(), getHeight());
+    public float getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(float velocityY) {
+        this.velocityY = velocityY;
     }
 }
-
-// Quedamos en que hay un problema con el código y estabas en cuestiones de
-// salto, gravedad y colisiones
