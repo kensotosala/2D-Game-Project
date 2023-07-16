@@ -5,10 +5,13 @@ import javax.swing.JFrame;
 public class GameWindow {
     private JFrame jframe;
 
-    public GameWindow() {
+    // Constructor
+    public GameWindow(GamePanel gamePanel) {
         jframe = new JFrame();
-        jframe.setSize(800, 600);
-        jframe.setVisible(true);
+        jframe.setSize(400, 400);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.add(gamePanel);
+        jframe.setLocationRelativeTo(null);
+        jframe.setVisible(true);
     }
 }
