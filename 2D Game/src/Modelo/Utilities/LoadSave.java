@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
 import javax.imageio.ImageIO;
 
+=======
+>>>>>>> parent of b118cba (Arreglo de plataformas)
 public class LoadSave {
     public static BufferedImage[] idleAnimation;
     public static BufferedImage[] runningAnimation;
@@ -97,4 +100,42 @@ public class LoadSave {
 
         return frames.toArray(new BufferedImage[0]);
     }
+<<<<<<< HEAD
+=======
+
+    // Otros métodos para cargar las demás animaciones...
+
+    public BufferedImage[] GetPlayerAtlas() {
+        BufferedImage[] idle = GetIdleAnimation();
+        BufferedImage[] running = GetRunningAnimation();
+        // Carga de otras animaciones...
+
+        // Combina todas las animaciones en una sola matriz
+        BufferedImage[][] allAnimations = {
+                idle,
+                running,
+                // Otras animaciones...
+        };
+
+        int totalFrames = 0;
+
+        for (BufferedImage[] animation : allAnimations) {
+            if (animation != null) {
+                totalFrames += animation.length;
+            }
+        }
+
+        BufferedImage[] playerAtlas = new BufferedImage[totalFrames];
+        int frameIndex = 0;
+
+        for (BufferedImage[] animation : allAnimations) {
+            if (animation != null) {
+                System.arraycopy(animation, 0, playerAtlas, frameIndex, animation.length);
+                frameIndex += animation.length;
+            }
+        }
+
+        return playerAtlas;
+    }
+>>>>>>> parent of b118cba (Arreglo de plataformas)
 }
