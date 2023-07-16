@@ -1,5 +1,4 @@
-
-package Controlador;
+package Modelo;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -9,9 +8,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.imageio.ImageIO;
 
-import Modelo.KeyboardInputs;
-import Modelo.MouseInputs;
-import Modelo.Player;
 import Modelo.Levels.LevelManager;
 
 public class Game {
@@ -25,12 +21,11 @@ public class Game {
     private KeyboardInputs keyboardInputs;
     private MouseInputs mouseInputs;
 
-    private Game() {
-        // Inicializar el juego
-        player = new Player(100, 100, levelManager.getPlatforms());
+    public Game() {
         levelManager = new LevelManager("2D Game/resources/Platforms");
-        keyboardInputs = new KeyboardInputs();
-        mouseInputs = new MouseInputs();
+        player = new Player(100, 100, levelManager.getPlatforms());
+        keyboardInputs = new KeyboardInputs(player);
+        mouseInputs = new MouseInputs(player);
     }
 
     public static Game getInstance() {
@@ -51,5 +46,8 @@ public class Game {
     public void render(Graphics g) {
         levelManager.draw(g);
         player.render(g);
+    }
+
+    public void start() {
     }
 }

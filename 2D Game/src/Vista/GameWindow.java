@@ -7,11 +7,11 @@ public class GameWindow {
     private JFrame frame;
 
     public GameWindow(GamePanel gamePanel) {
-        frame = new JFrame();
+        frame = new JFrame("Game Window");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(gamePanel);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
+        frame.getContentPane().add(gamePanel); // Agregar gamePanel al contenido del JFrame
+        frame.pack(); // Ajustar el tamaño del JFrame al contenido
+        frame.setLocationRelativeTo(null); // Centrar el JFrame en la pantalla
         frame.setResizable(false);
         frame.setVisible(true);
     }

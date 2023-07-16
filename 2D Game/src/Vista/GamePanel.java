@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
-import Controlador.Game;
+import Modelo.Game;
 import Modelo.KeyboardInputs;
 import Modelo.MouseInputs;
 

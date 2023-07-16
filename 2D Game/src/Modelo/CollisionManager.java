@@ -1,4 +1,3 @@
-// Paquete Modelo
 package Modelo;
 
 import java.awt.Rectangle;
