@@ -1,61 +1,55 @@
+// Paquete Modelo
 package Modelo;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import Vista.GamePanel;
+import Controlador.Game;
 
 public class KeyboardInputs implements KeyListener {
+    private Player player;
 
-    private GamePanel gamePanel;
-
-    public KeyboardInputs(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
+    public KeyboardInputs() {
+        player = Game.getInstance().getPlayer();
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Player player = gamePanel.getGame().getPlayer();
-
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A:
-                player.setLeft(true);
-                player.setRight(false);
-                player.setMoving(true);
-                player.setVelocityX(-player.getPlayerSpeed()); // Actualizar la velocidad hacia la izquierda
+                player.setMovingLeft(true);
                 break;
             case KeyEvent.VK_D:
-                player.setRight(true);
-                player.setLeft(false);
-                player.setMoving(true);
-                player.setVelocityX(player.getPlayerSpeed()); // Actualizar la velocidad hacia la derecha
+                player.setMovingRight(true);
+                break;
+            case KeyEvent.VK_SPACE:
+                player.jump();
+                break;
+            case KeyEvent.VK_SHIFT:
+                player.setSprinting(true);
+                break;
+            case KeyEvent.VK_F:
+                player.attack();
                 break;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        Player player = gamePanel.getGame().getPlayer();
-
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A:
-                player.setLeft(false);
-                if (!player.isRight()) {
-                    player.setMoving(false);
-                    player.setVelocityX(0.0f);
-                }
+                player.setMovingLeft(false);
                 break;
             case KeyEvent.VK_D:
-                player.setRight(false);
-                if (!player.isLeft()) {
-                    player.setMoving(false);
-                    player.setVelocityX(0.0f);
-                }
+                player.setMovingRight(false);
+                break;
+            case KeyEvent.VK_SHIFT:
+                player.setSprinting(false);
                 break;
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
 }

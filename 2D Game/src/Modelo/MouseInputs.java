@@ -1,54 +1,43 @@
+// Paquete Modelo
 package Modelo;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import Vista.GamePanel;
-
 public class MouseInputs implements MouseListener, MouseMotionListener {
+    private Player player;
 
-    private GamePanel gamePanel;
-
-    public MouseInputs(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
+    public MouseInputs() {
+        player = Game.getInstance().getPlayer();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            Player player = gamePanel.getGame().getPlayer();
-            player.setAttacking(true);
-        }
+        player.attack();
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
 
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
     }
 }

@@ -1,10 +1,10 @@
+// Paquete Modelo
 package Modelo;
 
 import java.awt.Rectangle;
 import java.util.List;
 
 public class CollisionManager {
-
     private List<Platform> platforms;
 
     public CollisionManager(List<Platform> platforms) {
@@ -22,20 +22,19 @@ public class CollisionManager {
         Rectangle playerBounds = player.getBounds();
         Rectangle platformBounds = platform.getBounds();
 
-        // Ajustar la posición del jugador para evitar que se superponga con la
-        // plataforma
         if (playerBounds.y < platformBounds.y) {
             player.setY(platformBounds.y - playerBounds.height);
             player.setVelocityY(0.0f);
+            player.setJumping(false);
         } else if (playerBounds.y > platformBounds.y) {
             player.setY(platformBounds.y + platformBounds.height);
             player.setVelocityY(0.0f);
         }
 
-        // Actualizar el estado del salto del jugador
-        if (player.isJumping()) {
-            player.setJumping(false);
-            player.setVelocityY(0.0f);
+        if (player.getX() < 0) {
+            player.setX(0);
+        } else if (player.getX() > Game.GAME_WIDTH - player.getWidth()) {
+            player.setX(Game.GAME_WIDTH - player.getWidth());
         }
     }
 
