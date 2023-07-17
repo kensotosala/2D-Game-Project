@@ -1,42 +1,40 @@
 package main;
 
 import java.awt.Graphics;
+<<<<<<< HEAD
 import java.awt.Graphics2D;
+=======
+>>>>>>> parent of 98b21e4 (Level Creation)
 
 import entities.Player;
-import levels.LevelManager;
 
 public class Game implements Runnable {
 
+    private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
     private final int FPS_SET = 120;
     private final int UPS_SET = 120;
 
-    public final static int TILES_DEFAULT_SIZE = 32;
-    public final static float SCALE = 1.5f;
-    public final static int TILES_IN_WIDTH = 26;
-    public final static int TILES_IN_HEIGHT = 14;
-    public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
-    public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
-    public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
-
     private Player player;
-    private LevelManager levelManager;
 
     public Game() {
         initClasses();
 
         gamePanel = new GamePanel(this);
-        new GameWindow(gamePanel);
+        gameWindow = new GameWindow(gamePanel);
         gamePanel.requestFocus();
         startGameLoop();
     }
 
     private void initClasses() {
+<<<<<<< HEAD
         levelManager = new LevelManager(this);
         player = new Player(200, 200, 50, 50);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+=======
+        player = new Player(200, 200);
+>>>>>>> parent of 98b21e4 (Level Creation)
     }
 
     private void startGameLoop() {
@@ -46,10 +44,10 @@ public class Game implements Runnable {
 
     public void update() {
         player.update();
-        levelManager.update();
     }
 
     public void render(Graphics g) {
+<<<<<<< HEAD
         Graphics2D g2d = (Graphics2D) g;
 
         // Clear the screen
@@ -61,9 +59,10 @@ public class Game implements Runnable {
         // Draw the player on top of the level
         player.render(g2d);
     }
+=======
+        player.render(g);
+>>>>>>> parent of 98b21e4 (Level Creation)
 
-    public LevelManager getLevelManager() {
-        return levelManager;
     }
 
     @Override
