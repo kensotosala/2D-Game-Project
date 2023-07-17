@@ -1,24 +1,36 @@
 package levels;
 
-import com.b3dgs.tmx.TmxMap;
-import com.b3dgs.tmx.TmxMapLoader;
-import main.Game;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
-public class LevelManager {
-    private Game game;
-    private TmxMap level;
+import javax.swing.JPanel;
 
-    public LevelManager(Game game) {
-        this.game = game;
-        loadLevel();
+import utilz.LoadSave;
+
+public class LevelManager extends JPanel {
+    private BufferedImage level1SpriteImage;
+
+    public LevelManager() {
+        loadLevel1SpriteImage(); // Load the level 1 sprite image
     }
 
-    private void loadLevel() {
-        TmxMapLoader loader = new TmxMapLoader();
-        level = loader.load("src/resources/Levels/level_1.tmx");
+    private void loadLevel1SpriteImage() {
+        // Load the level 1 image using the LoadSave class
+        level1SpriteImage = LoadSave.getLevel1SpriteImage();
     }
 
-    public TmxMap getLevel() {
-        return level;
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Paint the level 1 sprite image
+        g.drawImage(level1SpriteImage, 0, 0, null);
+    }
+
+    public Object getCurrentLevel() {
+        return null;
+    }
+
+    public void draw(Graphics2D g2d) {
     }
 }

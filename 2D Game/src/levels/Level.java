@@ -1,19 +1,19 @@
 package levels;
 
-import java.awt.Graphics2D;
-
 public class Level {
-    private int[][] levelData;
 
-    public Level(int[][] levelData) {
-        this.levelData = levelData;
+    private int[][] lvlData;
+
+    public Level(int[][] lvlData) {
+        this.lvlData = lvlData;
+    }
+
+    public int getSpriteIndex(int x, int y) {
+        return lvlData[y][x];
     }
 
     public int[][] getLevelData() {
-        return levelData;
+        return lvlData;
     }
 
-    public void draw(Graphics2D g2d) {
-
-    }
 }

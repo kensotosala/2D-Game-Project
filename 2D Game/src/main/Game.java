@@ -8,6 +8,7 @@ import levels.LevelManager;
 
 public class Game implements Runnable {
 
+    private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
     private final int FPS_SET = 120;
@@ -26,15 +27,16 @@ public class Game implements Runnable {
 
     public Game() {
         initClasses();
-
-        gamePanel = new GamePanel(this);
-        new GameWindow(gamePanel);
-        gamePanel.requestFocus();
+        levelManager = new LevelManager();
+        gameWindow = new GameWindow(gamePanel);
+        gameWindow.setGame(this);
+        gameWindow.add(levelManager);
+        gameWindow.requestFocus();
         startGameLoop();
     }
 
     private void initClasses() {
-        levelManager = new LevelManager(this);
+        levelManager = new LevelManager();
         player = new Player(200, 200, 50, 50);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
     }
@@ -46,20 +48,10 @@ public class Game implements Runnable {
 
     public void update() {
         player.update();
-        levelManager.update();
     }
 
     public void render(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-
-        // Clear the screen
-        g2d.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-        // Draw the level map
-        levelManager.draw(g2d);
-
-        // Draw the player on top of the level
-        player.render(g2d);
+        player.render(g);
     }
 
     public LevelManager getLevelManager() {
@@ -76,41 +68,30 @@ public class Game implements Runnable {
         long lastCheck = System.currentTimeMillis();
         double deltaU = 0;
         double deltaF = 0;
-
         // Game loop
         while (true) {
             long currentTime = System.nanoTime();
             deltaU += (currentTime - previousTime) / timePerUpdate;
             deltaF += (currentTime - previousTime) / timePerFrame;
             previousTime = currentTime;
-
             if (deltaU >= 1) {
                 // Update()
                 updates++;
                 deltaU--;
                 update();
             }
-
             if (deltaF >= 1) {
                 // Draw()
                 gamePanel.repaint();
                 frames++;
                 deltaF--;
             }
-
             // Increments the frame count
             if (System.currentTimeMillis() - lastCheck >= 1000) {
                 lastCheck = System.currentTimeMillis();
                 System.out.println("FPS: " + frames + " | UPS: " + updates);
                 frames = 0;
                 updates = 0;
-            }
-
-            try {
-                // Limit the game loop to the target FPS
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }

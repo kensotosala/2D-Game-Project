@@ -1,22 +1,11 @@
 package entities;
 
-import static utilz.Constants.PlayerConstants.ATTACK;
-import static utilz.Constants.PlayerConstants.ATTACK_JUMP;
-import static utilz.Constants.PlayerConstants.HIT;
-import static utilz.Constants.PlayerConstants.IDLE;
-import static utilz.Constants.PlayerConstants.JUMP;
-import static utilz.Constants.PlayerConstants.RUNNING;
-import static utilz.HelpMethods.CanMoveHere;
-
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-<<<<<<< HEAD
-
-=======
 import static utilz.Constants.PlayerConstants.*;
-import static utilz.HelpMethods.CanMoveHere;
->>>>>>> parent of afacd10 (Revert "Level Creation")
+import static utilz.Constants.Directions.*;
+
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
@@ -47,37 +36,24 @@ public class Player extends Entity {
 
     public void update() {
         updatePosition();
-        updateHitbox();
         updateAnimationTick();
         setAnimation();
     }
 
     private void updatePosition() {
         moving = false;
-
-        if (!left && !right && !up && !down) {
-            return;
-        }
-
-        float xSpeed = 0;
-        float ySpeed = 0;
-
         if (left && !right) {
-            xSpeed -= playerSpeed;
+            x -= playerSpeed;
+            moving = true;
         } else if (right && !left) {
-            xSpeed += playerSpeed;
-
+            x += playerSpeed;
+            moving = true;
         }
-
         if (up && !down) {
-            ySpeed -= playerSpeed;
-
+            y -= playerSpeed;
+            moving = true;
         } else if (down && !up) {
-            ySpeed += playerSpeed;
-        }
-        if (CanMoveHere(x + xSpeed, y + ySpeed, width, height, lvlData)) {
-            this.x += xSpeed;
-            this.y += ySpeed;
+            y += playerSpeed;
             moving = true;
         }
     }
@@ -110,14 +86,13 @@ public class Player extends Entity {
 
         int animationLength = animationFrames.length;
 
+        g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 100, 100, null);
         g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 50, 50, null);
-        drawHitbox(g);
     }
 
     private void updateAnimationTick() {
         animationTick++;
         BufferedImage[] currentAnimation;
-
         switch (playerAction) {
             case IDLE:
                 currentAnimation = idleAnimation;
@@ -141,9 +116,7 @@ public class Player extends Entity {
                 currentAnimation = idleAnimation;
                 break;
         }
-
         int animationLength = currentAnimation.length;
-
         if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex++;
@@ -156,17 +129,14 @@ public class Player extends Entity {
 
     private void setAnimation() {
         int startAnimation = playerAction;
-
         if (moving) {
             playerAction = RUNNING;
         } else {
             playerAction = IDLE;
         }
-
         if (attacking) {
             playerAction = ATTACK;
         }
-
         if (startAnimation != playerAction) {
             resetAnimationTick();
         }
@@ -190,7 +160,6 @@ public class Player extends Entity {
                 e.printStackTrace();
             }
         }
-
         // Running Animation
         runningAnimation = new BufferedImage[15];
         idleSpritesPath = "src/resources/Sonic-Corriendo";
@@ -203,7 +172,6 @@ public class Player extends Entity {
                 e.printStackTrace();
             }
         }
-
         // Jumping Animation
         jumpingAnimation = new BufferedImage[4];
         idleSpritesPath = "src/resources/Sonic-Saltando";
@@ -216,7 +184,6 @@ public class Player extends Entity {
                 e.printStackTrace();
             }
         }
-
         // Attacking Animation
         attackingAnimation = new BufferedImage[8];
         idleSpritesPath = "src/resources/Sonic-Ataque";
@@ -229,7 +196,6 @@ public class Player extends Entity {
                 e.printStackTrace();
             }
         }
-
         // Hit Animation
         hitAnimation = new BufferedImage[2];
         idleSpritesPath = "src/resources/Sonic-Golpeando";
@@ -242,7 +208,6 @@ public class Player extends Entity {
                 e.printStackTrace();
             }
         }
-
         // Jump Attack Animation
         jumpAttackAnimation = new BufferedImage[8];
         idleSpritesPath = "src/resources/Sonic-Salto-Ataque";
@@ -303,5 +268,4 @@ public class Player extends Entity {
     public void setRight(boolean right) {
         this.right = right;
     }
-
 }
