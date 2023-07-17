@@ -4,8 +4,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import static utilz.Constants.PlayerConstants.*;
-import static utilz.Constants.Directions.*;
-
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
@@ -90,7 +88,7 @@ public class Player extends Entity {
 
         int animationLength = animationFrames.length;
 
-        g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 100, 100, null);
+        g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 50, 50, null);
     }
 
     private void updateAnimationTick() {
