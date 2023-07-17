@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import entities.Player;
@@ -33,8 +34,9 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        player = new Player(200, 200);
         levelManager = new LevelManager(this);
+        player = new Player(200, 200, 50, 50);
+        player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
     }
 
     private void startGameLoop() {
@@ -47,8 +49,16 @@ public class Game implements Runnable {
         levelManager.update();
     }
 
-    public void render(Graphics2D g2d) {
+    public void render(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Clear the screen
+        g2d.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+        // Draw the level map
         levelManager.draw(g2d);
+
+        // Draw the player on top of the level
         player.render(g2d);
     }
 
@@ -96,6 +106,12 @@ public class Game implements Runnable {
                 updates = 0;
             }
 
+            try {
+                // Limit the game loop to the target FPS
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

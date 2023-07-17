@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import static utilz.Constants.PlayerConstants.*;
+import static utilz.HelpMethods.CanMoveHere;
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
@@ -25,14 +26,16 @@ public class Player extends Entity {
     private boolean right;
     private float playerSpeed = 2.0f;
     public Object resetDirBooleans;
+    private int[][] lvlData;
 
-    public Player(float x, float y) {
-        super(x, y);
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
         loadAnimations();
     }
 
     public void update() {
         updatePosition();
+        updateHitbox();
         updateAnimationTick();
         setAnimation();
     }
@@ -40,23 +43,30 @@ public class Player extends Entity {
     private void updatePosition() {
         moving = false;
 
+        if (!left && !right && !up && !down) {
+            return;
+        }
+
+        float xSpeed = 0;
+        float ySpeed = 0;
+
         if (left && !right) {
-            x -= playerSpeed;
-            moving = true;
+            xSpeed -= playerSpeed;
         } else if (right && !left) {
-            x += playerSpeed;
-            moving = true;
+            xSpeed += playerSpeed;
 
         }
 
         if (up && !down) {
-            y -= playerSpeed;
-            moving = true;
+            ySpeed -= playerSpeed;
 
         } else if (down && !up) {
-            y += playerSpeed;
+            ySpeed += playerSpeed;
+        }
+        if (CanMoveHere(x + xSpeed, y + ySpeed, width, height, lvlData)) {
+            this.x += xSpeed;
+            this.y += ySpeed;
             moving = true;
-
         }
     }
 
@@ -89,6 +99,7 @@ public class Player extends Entity {
         int animationLength = animationFrames.length;
 
         g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 50, 50, null);
+        drawHitbox(g);
     }
 
     private void updateAnimationTick() {
@@ -232,6 +243,10 @@ public class Player extends Entity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void loadLvlData(int[][] lvlData) {
+        this.lvlData = lvlData;
     }
 
     public void resetDirBooleans() {

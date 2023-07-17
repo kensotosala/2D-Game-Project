@@ -1,29 +1,24 @@
 package levels;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import com.b3dgs.tmx.TmxMap;
+import com.b3dgs.tmx.TmxMapLoader;
 import main.Game;
-import utilz.LoadSave;
 
 public class LevelManager {
     private Game game;
+    private TmxMap level;
 
     public LevelManager(Game game) {
         this.game = game;
+        loadLevel();
     }
 
-    public void draw(Graphics2D g2d) {
-        // Draw the Level 1 Sprite image at a specific position
-        BufferedImage level1SpriteImage = LoadSave.getLevel1SpriteImage();
-        int x = 0; // Adjust the 'x' position as needed
-        int y = 0; // Adjust the 'y' position as needed
-        g2d.drawImage(level1SpriteImage, x, y, null);
-
-        // Draw the player on the screen
-        game.getPlayer().render(g2d);
+    private void loadLevel() {
+        TmxMapLoader loader = new TmxMapLoader();
+        level = loader.load("src/resources/Levels/level_1.tmx");
     }
 
-    public void update() {
-        // Update the level state
+    public TmxMap getLevel() {
+        return level;
     }
 }
