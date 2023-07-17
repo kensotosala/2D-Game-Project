@@ -1,7 +1,10 @@
 package utilz;
 
+<<<<<<< HEAD
 <<<<<<<HEAD
 
+=======
+>>>>>>> parent of afacd10 (Revert "Level Creation")
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
@@ -103,10 +106,5 @@ public class LoadSave {
         }
 
         return null; // Handle error case appropriately
-=======
-public class LoadSave {
-    public static BufferedImage GetPlayerAtlas() {
-
->>>>>>> parent of 98b21e4 (Level Creation)
     }
 }

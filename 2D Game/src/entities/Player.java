@@ -11,7 +11,12 @@ import static utilz.HelpMethods.CanMoveHere;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
+<<<<<<< HEAD
 
+=======
+import static utilz.Constants.PlayerConstants.*;
+import static utilz.HelpMethods.CanMoveHere;
+>>>>>>> parent of afacd10 (Revert "Level Creation")
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
