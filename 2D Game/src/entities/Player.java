@@ -1,15 +1,17 @@
 package entities;
 
+import static utilz.Constants.PlayerConstants.ATTACK;
+import static utilz.Constants.PlayerConstants.ATTACK_JUMP;
+import static utilz.Constants.PlayerConstants.HIT;
+import static utilz.Constants.PlayerConstants.IDLE;
+import static utilz.Constants.PlayerConstants.JUMP;
+import static utilz.Constants.PlayerConstants.RUNNING;
+import static utilz.HelpMethods.CanMoveHere;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import static utilz.Constants.PlayerConstants.*;
-<<<<<<< HEAD
-import static utilz.HelpMethods.CanMoveHere;
-=======
-import static utilz.Constants.Directions.*;
 
->>>>>>> parent of 98b21e4 (Level Creation)
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
@@ -103,12 +105,8 @@ public class Player extends Entity {
 
         int animationLength = animationFrames.length;
 
-<<<<<<< HEAD
         g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 50, 50, null);
         drawHitbox(g);
-=======
-        g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 100, 100, null);
->>>>>>> parent of 98b21e4 (Level Creation)
     }
 
     private void updateAnimationTick() {
