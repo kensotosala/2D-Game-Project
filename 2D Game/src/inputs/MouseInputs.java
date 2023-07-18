@@ -8,48 +8,51 @@ import main.GamePanel;
 
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
-    private GamePanel gamePanel;
+	private GamePanel gamePanel;
 
-    public MouseInputs(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-    }
+	public MouseInputs(GamePanel gamePanel) {
+		this.gamePanel = gamePanel;
+	}
 
-    @Override
-    public void mouseDragged(MouseEvent e) {
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
+	@Override
+	public void mouseMoved(MouseEvent e) {
 
-    }
+	}
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1)
+			gamePanel.getGame().getPlayer().setAttacking(true);
 
-    }
+	}
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            gamePanel.getGame().getPlayer().setAttacking(true);
-        }
-    }
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            gamePanel.getGame().getPlayer().setAttacking(false);
-        }
-    }
+	}
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    @Override
-    public void mouseExited(MouseEvent e) {
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
 
-    }
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+
+	}
+
 }

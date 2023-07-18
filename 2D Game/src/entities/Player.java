@@ -1,271 +1,176 @@
 package entities;
 
+import static utilz.Constants.PlayerConstants.*;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import static utilz.Constants.PlayerConstants.*;
-import static utilz.Constants.Directions.*;
 
-import javax.imageio.ImageIO;
+import utilz.Constants;
+import utilz.LoadSave;
 
 public class Player extends Entity {
-    private BufferedImage[] idleAnimation;
-    private BufferedImage[] runningAnimation;
-    private BufferedImage[] jumpingAnimation;
-    private BufferedImage[] attackingAnimation;
-    private BufferedImage[] hitAnimation;
-    private BufferedImage[] jumpAttackAnimation;
-    private int animationTick;
-    private int animationIndex;
-    private int animationSpeed = 15;
-    private int playerAction = IDLE;
-    private boolean moving = false;
-    private boolean attacking = false;
-    private boolean up;
-    private boolean down;
-    private boolean left;
-    private boolean right;
-    private float playerSpeed = 2.0f;
-    public Object resetDirBooleans;
-    private int[][] lvlData;
+	private BufferedImage[][] animations;
+	private int aniTick, aniIndex, aniSpeed = 25;
+	private int playerAction = IDLE;
+	private boolean moving = false, attacking = false;
+	private boolean left, up, right, down;
+	private float playerSpeed = 2.0f;
 
-    public Player(float x, float y, int width, int height) {
-        super(x, y, width, height);
-        loadAnimations();
-    }
+	public Player(float x, float y, int width, int height) {
+		super(x, y, width, height);
+		loadAnimations();
+	}
 
-    public void update() {
-        updatePosition();
-        updateAnimationTick();
-        setAnimation();
-    }
+	public void update() {
+		updatePos();
+		updateAnimationTick();
+		setAnimation();
+	}
 
-    private void updatePosition() {
-        moving = false;
-        if (left && !right) {
-            x -= playerSpeed;
-            moving = true;
-        } else if (right && !left) {
-            x += playerSpeed;
-            moving = true;
-        }
-        if (up && !down) {
-            y -= playerSpeed;
-            moving = true;
-        } else if (down && !up) {
-            y += playerSpeed;
-            moving = true;
-        }
-    }
+	public void render(Graphics g) {
+		if (playerAction >= 0 && playerAction < animations.length) {
+			BufferedImage[] animation = animations[playerAction];
+			int numSubimages = Constants.PlayerConstants.GetSpriteAmount(playerAction);
 
-    public void render(Graphics g) {
-        BufferedImage[] animationFrames;
-        switch (playerAction) {
-            case IDLE:
-                animationFrames = idleAnimation;
-                break;
-            case RUNNING:
-                animationFrames = runningAnimation;
-                break;
-            case JUMP:
-                animationFrames = jumpingAnimation;
-                break;
-            case ATTACK:
-                animationFrames = attackingAnimation;
-                break;
-            case ATTACK_JUMP:
-                animationFrames = jumpAttackAnimation;
-                break;
-            case HIT:
-                animationFrames = hitAnimation;
-                break;
-            default:
-                animationFrames = idleAnimation;
-                break;
-        }
+			// Calculate the index to ensure it's within the valid range
+			aniIndex %= numSubimages;
 
-        int animationLength = animationFrames.length;
+			if (aniIndex >= 0 && aniIndex < animation.length) {
+				g.drawImage(animation[aniIndex], (int) x, (int) y, width, height, null);
+			}
+		}
+	}
 
-        g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 100, 100, null);
-        g.drawImage(animationFrames[animationIndex % animationLength], (int) x, (int) y, 50, 50, null);
-    }
+	private void updateAnimationTick() {
+		aniTick++;
+		if (aniTick >= aniSpeed) {
+			aniTick = 0;
+			aniIndex++;
+			if (aniIndex >= GetSpriteAmount(playerAction)) {
+				aniIndex = 0;
+				attacking = false;
+			}
 
-    private void updateAnimationTick() {
-        animationTick++;
-        BufferedImage[] currentAnimation;
-        switch (playerAction) {
-            case IDLE:
-                currentAnimation = idleAnimation;
-                break;
-            case RUNNING:
-                currentAnimation = runningAnimation;
-                break;
-            case JUMP:
-                currentAnimation = jumpingAnimation;
-                break;
-            case ATTACK:
-                currentAnimation = attackingAnimation;
-                break;
-            case ATTACK_JUMP:
-                currentAnimation = jumpAttackAnimation;
-                break;
-            case HIT:
-                currentAnimation = hitAnimation;
-                break;
-            default:
-                currentAnimation = idleAnimation;
-                break;
-        }
-        int animationLength = currentAnimation.length;
-        if (animationTick >= animationSpeed) {
-            animationTick = 0;
-            animationIndex++;
-            if (animationIndex >= animationLength) {
-                animationIndex = 0;
-                attacking = false;
-            }
-        }
-    }
+		}
 
-    private void setAnimation() {
-        int startAnimation = playerAction;
-        if (moving) {
-            playerAction = RUNNING;
-        } else {
-            playerAction = IDLE;
-        }
-        if (attacking) {
-            playerAction = ATTACK;
-        }
-        if (startAnimation != playerAction) {
-            resetAnimationTick();
-        }
-    }
+	}
 
-    private void resetAnimationTick() {
-        animationTick = 0;
-        animationIndex = 0;
-    }
+	private void setAnimation() {
+		int startAni = playerAction;
 
-    private void loadAnimations() {
-        // Idle Animation
-        idleAnimation = new BufferedImage[13];
-        String idleSpritesPath = "src/resources/Sonic";
-        for (int i = 0; i < idleAnimation.length; i++) {
-            String imageName = "/Sonic (" + (i + 1) + ").png";
-            String imagePath = idleSpritesPath + imageName;
-            try {
-                idleAnimation[i] = ImageIO.read(new File(imagePath));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        // Running Animation
-        runningAnimation = new BufferedImage[15];
-        idleSpritesPath = "src/resources/Sonic-Corriendo";
-        for (int i = 0; i < runningAnimation.length; i++) {
-            String imageName = "/sonic-running-" + (i + 1) + ".png";
-            String imagePath = idleSpritesPath + imageName;
-            try {
-                runningAnimation[i] = ImageIO.read(new File(imagePath));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        // Jumping Animation
-        jumpingAnimation = new BufferedImage[4];
-        idleSpritesPath = "src/resources/Sonic-Saltando";
-        for (int i = 0; i < jumpingAnimation.length; i++) {
-            String imageName = "/sonic-jumping-" + (i + 1) + ".png";
-            String imagePath = idleSpritesPath + imageName;
-            try {
-                jumpingAnimation[i] = ImageIO.read(new File(imagePath));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        // Attacking Animation
-        attackingAnimation = new BufferedImage[8];
-        idleSpritesPath = "src/resources/Sonic-Ataque";
-        for (int i = 0; i < attackingAnimation.length; i++) {
-            String imageName = "/sonic-attack-" + (i + 1) + ".png";
-            String imagePath = idleSpritesPath + imageName;
-            try {
-                attackingAnimation[i] = ImageIO.read(new File(imagePath));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        // Hit Animation
-        hitAnimation = new BufferedImage[2];
-        idleSpritesPath = "src/resources/Sonic-Golpeando";
-        for (int i = 0; i < hitAnimation.length; i++) {
-            String imageName = "/sonic-hit-" + (i + 1) + ".png";
-            String imagePath = idleSpritesPath + imageName;
-            try {
-                hitAnimation[i] = ImageIO.read(new File(imagePath));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        // Jump Attack Animation
-        jumpAttackAnimation = new BufferedImage[8];
-        idleSpritesPath = "src/resources/Sonic-Salto-Ataque";
-        for (int i = 0; i < jumpAttackAnimation.length; i++) {
-            String imageName = "/sonic-attack-jump (" + (i + 1) + ").png";
-            String imagePath = idleSpritesPath + imageName;
-            try {
-                jumpAttackAnimation[i] = ImageIO.read(new File(imagePath));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+		if (attacking) {
+			playerAction = ATTACK_1;
+		} else if (moving) {
+			playerAction = RUNNING;
+		} else {
+			playerAction = IDLE;
+		}
 
-    public void loadLvlData(int[][] lvlData) {
-        this.lvlData = lvlData;
-    }
+		if (startAni != playerAction) {
+			resetAniTick();
+		}
+	}
 
-    public void resetDirBooleans() {
-        left = false;
-        right = false;
-        up = false;
-        down = false;
-    }
+	private void resetAniTick() {
+		aniTick = 0;
+		aniIndex = 0;
+	}
 
-    public void setAttacking(boolean attacking) {
-        this.attacking = attacking;
-    }
+	private void updatePos() {
+		moving = false;
 
-    public boolean isUp() {
-        return up;
-    }
+		if (left && !right) {
+			x -= playerSpeed;
+			moving = true;
+		} else if (right && !left) {
+			x += playerSpeed;
+			moving = true;
+		}
 
-    public void setUp(boolean up) {
-        this.up = up;
-    }
+		if (up && !down) {
+			y -= playerSpeed;
+			moving = true;
+		} else if (down && !up) {
+			y += playerSpeed;
+			moving = true;
+		}
+	}
 
-    public boolean isDown() {
-        return down;
-    }
+	private void loadAnimations() {
+		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
-    public void setDown(boolean down) {
-        this.down = down;
-    }
+		animations = new BufferedImage[5][6];
 
-    public boolean isLeft() {
-        return left;
-    }
+		int subimageWidth = 64;
+		int subimageHeight = 64;
 
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
+		// Idle animation
+		for (int i = 0; i < animations[0].length; i++) {
+			animations[0][i] = img.getSubimage(i * subimageWidth, 0, subimageWidth, subimageHeight);
+		}
 
-    public boolean isRight() {
-        return right;
-    }
+		// Attack animation
+		for (int i = 0; i < animations[1].length; i++) {
+			animations[1][i] = img.getSubimage(i * subimageWidth, subimageHeight, subimageWidth, subimageHeight);
+		}
 
-    public void setRight(boolean right) {
-        this.right = right;
-    }
+		// Running animation
+		for (int i = 0; i < animations[2].length; i++) {
+			animations[2][i] = img.getSubimage(i * subimageWidth, subimageHeight * 2, subimageWidth, subimageHeight);
+		}
+
+		// Falling animation
+		for (int i = 0; i < animations[3].length; i++) {
+			animations[3][i] = img.getSubimage(i * subimageWidth, subimageHeight * 3, subimageWidth, subimageHeight);
+		}
+
+		// Jump animation
+		for (int i = 0; i < animations[4].length; i++) {
+			animations[4][i] = img.getSubimage(i * subimageWidth, subimageHeight * 4, subimageWidth, subimageHeight);
+		}
+	}
+
+	public void resetDirBooleans() {
+		left = false;
+		right = false;
+		up = false;
+		down = false;
+	}
+
+	public void setAttacking(boolean attacking) {
+		this.attacking = attacking;
+	}
+
+	public boolean isLeft() {
+		return left;
+	}
+
+	public void setLeft(boolean left) {
+		this.left = left;
+	}
+
+	public boolean isUp() {
+		return up;
+	}
+
+	public void setUp(boolean up) {
+		this.up = up;
+	}
+
+	public boolean isRight() {
+		return right;
+	}
+
+	public void setRight(boolean right) {
+		this.right = right;
+	}
+
+	public boolean isDown() {
+		return down;
+	}
+
+	public void setDown(boolean down) {
+		this.down = down;
+	}
+
 }
