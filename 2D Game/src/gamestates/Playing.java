@@ -26,38 +26,22 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void update() {
-        player.update();
         levelManager.update();
+        player.update();
+
     }
 
     @Override
     public void draw(Graphics g) {
         levelManager.draw(g);
         player.render(g);
+
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1)
             player.setAttacking(true);
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseMoved'");
     }
 
     @Override
@@ -75,7 +59,6 @@ public class Playing extends State implements Statemethods {
             case KeyEvent.VK_BACK_SPACE:
                 Gamestate.state = Gamestate.MENU;
                 break;
-
         }
     }
 
@@ -92,6 +75,25 @@ public class Playing extends State implements Statemethods {
                 player.setJump(false);
                 break;
         }
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        // TODO Auto-generated method stub
+
     }
 
     public void windowFocusLost() {
