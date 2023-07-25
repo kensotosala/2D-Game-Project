@@ -4,8 +4,12 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import static utilz.Constants.EnemyConstants.CRABMEAT;
 
 import javax.imageio.ImageIO;
+
+import entities.Crabmeat;
+import main.Game;
 
 public class LoadSave {
 
@@ -20,6 +24,7 @@ public class LoadSave {
 	public static final String URM_BUTTONS = "resources/urm_buttons.png";
 	public static final String VOLUME_BUTTONS = "resources/volume_buttons.png";
 	public static final String MENU_BACKGROUND_IMG = "resources/background_menu.png";
+	public static final String CRABMEAT_SPRITE = "resources/crabmeat-sprite.png";
 
 	public static BufferedImage GetSpriteAtlas(String fileName) {
 		BufferedImage img = null;
@@ -35,6 +40,30 @@ public class LoadSave {
 			e.printStackTrace();
 		}
 		return img;
+	}
+
+	public static Crabmeat[] GetCrabmeats() {
+		BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);
+		Crabmeat[] crabmeats = new Crabmeat[img.getWidth() * img.getHeight()];
+		int crabmeatsCount = 0;
+
+		for (int j = 0; j < img.getHeight(); j++) {
+			for (int i = 0; i < img.getWidth(); i++) {
+				Color color = new Color(img.getRGB(i, j));
+				int value = color.getGreen();
+				if (value == CRABMEAT) {
+					crabmeats[crabmeatsCount] = new Crabmeat(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
+					crabmeatsCount++;
+				}
+			}
+		}
+
+		// If necessary, create a new array with the correct size to eliminate null
+		// elements
+		Crabmeat[] finalCrabmeats = new Crabmeat[crabmeatsCount];
+		System.arraycopy(crabmeats, 0, finalCrabmeats, 0, crabmeatsCount);
+
+		return finalCrabmeats;
 	}
 
 	public static int[][] GetLevelData() {
