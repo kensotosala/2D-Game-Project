@@ -19,6 +19,9 @@ public class Constants {
 		public static final int CRABMEAT_WIDTH = (int) (CRABMEAT_WIDTH_DEFAULT * Game.SCALE);
 		public static final int CRABMEAT_HEIGHT = (int) (CRABMEAT_HEIGHT_DEFAULT * Game.SCALE);
 
+		public static final int CRABMEAT_DRAWOFFSET_X = (int) (26 * Game.SCALE);
+		public static final int CRABMEAT_DRAWOFFSET_Y = (int) (9 * Game.SCALE);
+
 		public static int GetSpriteAmount(int enemy_type, int enemy_state) {
 
 			switch (enemy_type) {
