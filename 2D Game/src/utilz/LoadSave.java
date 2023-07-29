@@ -13,7 +13,7 @@ import main.Game;
 
 public class LoadSave {
 
-	public static final String PLAYER_ATLAS = "resources/Characters-Sprites.png";
+	public static final String PLAYER_ATLAS = "resources/player_sprites_test.png";
 	public static final String LEVEL_ATLAS = "resources/OutsideSpritesSonic2.png";
 	// public static final String LEVEL_ONE_DATA = "resources/level_one_data.png";
 	public static final String LEVEL_ONE_DATA = "resources/level_one_data_long.png";
@@ -25,6 +25,7 @@ public class LoadSave {
 	public static final String VOLUME_BUTTONS = "resources/volume_buttons.png";
 	public static final String MENU_BACKGROUND_IMG = "resources/background_menu.png";
 	public static final String CRABMEAT_SPRITE = "resources/crabmeat-sprite.png";
+	public static final String STATUS_BAR = "resources/health_power_bar.png";
 
 	public static BufferedImage GetSpriteAtlas(String fileName) {
 		BufferedImage img = null;
