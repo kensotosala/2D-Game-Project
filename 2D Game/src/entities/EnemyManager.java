@@ -33,9 +33,9 @@ public class EnemyManager {
 
     }
 
-    public void update(int[][] lvlData) {
+    public void update(int[][] lvlData, Player player) {
         for (int i = 0; i < crabmeatsCount; i++) {
-            crabmeats[i].update(lvlData);
+            crabmeats[i].update(lvlData, player);
         }
     }
 
