@@ -1,7 +1,12 @@
 package utilz;
 
-import java.awt.geom.Rectangle2D;
+import static utilz.Constants.EnemyConstants.CRABMEAT;
 
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import entities.Crabmeat;
 import main.Game;
 
 public class HelpMethods {
@@ -21,12 +26,10 @@ public class HelpMethods {
             return true;
         if (y < 0 || y >= Game.GAME_HEIGHT)
             return true;
-
         float xIndex = x / Game.TILES_SIZE;
         float yIndex = y / Game.TILES_SIZE;
 
         return IsTileSolid((int) xIndex, (int) yIndex, lvlData);
-
     }
 
     public static boolean IsTileSolid(int xTile, int yTile, int[][] lvlData) {
@@ -63,17 +66,27 @@ public class HelpMethods {
     }
 
     public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, int[][] lvlData) {
-        // Check the pixel below bottomleft and bottomright
         if (!IsSolid(hitbox.x, hitbox.y + hitbox.height + 1, lvlData))
             if (!IsSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, lvlData))
                 return false;
-
         return true;
-
     }
 
     public static boolean IsFloor(Rectangle2D.Float hitbox, float xSpeed, int[][] lvlData) {
-        return IsSolid(hitbox.x + xSpeed, hitbox.y + hitbox.height + 1, lvlData);
+        if (xSpeed > 0)
+            return IsSolid(hitbox.x + hitbox.width + xSpeed, hitbox.y + hitbox.height + 1, lvlData);
+        else
+            return IsSolid(hitbox.x + xSpeed, hitbox.y + hitbox.height + 1, lvlData);
+    }
+
+    public static boolean IsAllTilesWalkable(int xStart, int xEnd, int y, int[][] lvlData) {
+        for (int i = 0; i < xEnd - xStart; i++) {
+            if (IsTileSolid(xStart + i, y, lvlData))
+                return false;
+            if (!IsTileSolid(xStart + i, y + 1, lvlData))
+                return false;
+        }
+        return true;
     }
 
     public static boolean IsSightClear(int[][] lvlData, Rectangle2D.Float firstHitbox, Rectangle2D.Float secondHitbox,
@@ -85,17 +98,59 @@ public class HelpMethods {
             return IsAllTilesWalkable(secondXTile, firstXTile, yTile, lvlData);
         else
             return IsAllTilesWalkable(firstXTile, secondXTile, yTile, lvlData);
-
     }
 
-    public static boolean IsAllTilesWalkable(int xStart, int xEnd, int y, int[][] lvlData) {
-        for (int i = 0; i < xEnd - xStart; i++) {
-            if (IsTileSolid(xStart + i, y, lvlData))
-                return false;
-            if (!IsTileSolid(xStart + i, y + 1, lvlData))
-                return false;
+    public static int[][] GetLevelData(BufferedImage img) {
+        int[][] lvlData = new int[img.getHeight()][img.getWidth()];
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getRed();
+                if (value >= 48)
+                    value = 0;
+                lvlData[j][i] = value;
+            }
+        return lvlData;
+    }
+
+    public static Crabmeat[] GetCrabs(BufferedImage img) {
+        int crabmeatCount = 0;
+        for (int j = 0; j < img.getHeight(); j++) {
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if (value == CRABMEAT) {
+                    crabmeatCount++;
+                }
+            }
         }
-        return true;
 
+        Crabmeat[] crabs = new Crabmeat[crabmeatCount];
+        int crabIndex = 0;
+
+        for (int j = 0; j < img.getHeight(); j++) {
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if (value == CRABMEAT) {
+                    crabs[crabIndex] = new Crabmeat(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
+                    crabIndex++;
+                }
+            }
+        }
+
+        return crabs;
     }
+
+    public static Point GetPlayerSpawn(BufferedImage img) {
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if (value == 100)
+                    return new Point(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
+            }
+        return new Point(1 * Game.TILES_SIZE, 1 * Game.TILES_SIZE);
+    }
+
 }

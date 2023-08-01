@@ -3,29 +3,67 @@ package entities;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
 import gamestates.Playing;
 import utilz.LoadSave;
 import static utilz.Constants.EnemyConstants.*;
 
 public class EnemyManager {
-
+    private Playing playing;
     private BufferedImage[][] crabmeatArr;
     private Crabmeat[] crabmeats;
-    private int crabmeatsCount = 0;
 
     public EnemyManager(Playing playing) {
+        this.playing = playing;
         loadEnemyImgs();
-        addEnemies();
     }
 
-    private void addEnemies() {
-        crabmeats = LoadSave.GetCrabmeats();
-        crabmeatsCount = crabmeats.length;
-        System.out.println("Size of crabmeats: " + crabmeatsCount);
+    public void loadEnemies(levels.Level level) {
+        crabmeats = level.getCrabmeats();
+    }
 
-        crabmeats = LoadSave.GetCrabmeats();
-        crabmeatsCount = crabmeats.length;
-        System.out.println("Size of crabmeats: " + crabmeatsCount);
+    public void update(int[][] lvlData, Player player) {
+        boolean isAnyActive = false;
+        for (int i = 0; i < crabmeats.length; i++) {
+            Crabmeat c = crabmeats[i];
+            if (c.isActive()) {
+                c.update(lvlData, player);
+                isAnyActive = true;
+            }
+        }
+
+        if (!isAnyActive) {
+            playing.setLevelCompleted(true);
+        }
+
+    }
+
+    public void draw(Graphics g, int xLvlOffset) {
+        drawCrabmeats(g, xLvlOffset);
+    }
+
+    private void drawCrabmeats(Graphics g, int xLvlOffset) {
+        for (int i = 0; i < crabmeats.length; i++) {
+            Crabmeat c = crabmeats[i];
+            if (c.isActive()) {
+                g.drawImage(crabmeatArr[c.getEnemyState()][c.getAniIndex()],
+                        (int) c.getHitbox().x - xLvlOffset - CRABMEAT_DRAWOFFSET_X + c.flipX(),
+                        (int) c.getHitbox().y - CRABMEAT_DRAWOFFSET_Y,
+                        CRABMEAT_WIDTH * c.flipW(), CRABMEAT_HEIGHT, null);
+                // c.drawHitbox(g, xLvlOffset);
+                // c.drawAttackBox(g, xLvlOffset);
+            }
+        }
+    }
+
+    public void checkEnemyHit(Rectangle2D.Float attackBox) {
+        for (int i = 0; i < crabmeats.length; i++) {
+            Crabmeat c = crabmeats[i];
+            if (c.isActive() && attackBox.intersects(c.getHitbox())) {
+                c.hurt(10);
+                return;
+            }
+        }
     }
 
     private void loadEnemyImgs() {
@@ -38,57 +76,8 @@ public class EnemyManager {
 
     }
 
-    public void update(int[][] lvlData, Player player) {
-        for (int i = 0; i < crabmeatsCount; i++) {
-            crabmeats[i].update(lvlData, player);
-        }
-
-        for (int i = 0; i < crabmeatsCount; i++) {
-            crabmeats[i].update(lvlData, player);
-        }
-    }
-
-    public void draw(Graphics g, int xLvlOffset) {
-        drawCrabmeats(g, xLvlOffset);
-        drawCrabbies(g, xLvlOffset);
-    }
-
-    private void drawCrabmeats(Graphics g, int xLvlOffset) {
-        for (int i = 0; i < crabmeatsCount; i++) {
-            Crabmeat c = crabmeats[i];
-            int enemyState = c.getEnemyState();
-            int aniIndex = c.getAniIndex();
-            int x = (int) c.getHitbox().x - xLvlOffset;
-            int y = (int) c.getHitbox().y;
-
-            g.drawImage(crabmeatArr[enemyState][aniIndex], x, y, CRABMEAT_WIDTH, CRABMEAT_HEIGHT, null);
-        }
-    }
-
-    private void drawCrabbies(Graphics g, int xLvlOffset) {
-        for (int i = 0; i < crabmeatsCount; i++) {
-            Crabmeat c = crabmeats[i];
-            int enemyState = c.getEnemyState();
-            int aniIndex = c.getAniIndex();
-            int x = (int) c.getHitbox().x - xLvlOffset;
-            int y = (int) c.getHitbox().y;
-
-            g.drawImage(crabmeatArr[enemyState][aniIndex], x, y, CRABMEAT_WIDTH, CRABMEAT_HEIGHT, null);
-        }
-    }
-
-    public void checkEnemyHit(Rectangle2D.Float attackBox) {
-        for (int i = 0; i < crabmeatsCount; i++) {
-            Crabmeat c = crabmeats[i];
-            if (c.isActive() && attackBox.intersects(c.getHitbox())) {
-                c.hurt(10);
-                return;
-            }
-        }
-    }
-
     public void resetAllEnemies() {
-        for (int i = 0; i < crabmeatsCount; i++) {
+        for (int i = 0; i < crabmeats.length; i++) {
             crabmeats[i].resetEnemy();
         }
     }

@@ -5,6 +5,7 @@ import static utilz.HelpMethods.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -64,6 +65,13 @@ public class Player extends Entity {
 		initAttackBox();
 	}
 
+	public void setSpawn(Point spawn) {
+		this.x = spawn.x;
+		this.y = spawn.y;
+		hitbox.x = x;
+		hitbox.y = y;
+	}
+
 	private void initAttackBox() {
 		attackBox = new Rectangle2D.Float(x, y, (int) (20 * Game.SCALE), (int) (20 * Game.SCALE));
 	}
@@ -90,7 +98,6 @@ public class Player extends Entity {
 			return;
 		attackChecked = true;
 		playing.checkEnemyHit(attackBox);
-
 	}
 
 	private void updateAttackBox() {
@@ -109,17 +116,8 @@ public class Player extends Entity {
 	public void render(Graphics g, int lvlOffset) {
 		g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX,
 				(int) (hitbox.y - yDrawOffset), width * flipW, height, null);
-		// drawHitbox(g, lvlOffset);
-		// drawAttackBox(g, lvlOffset);
 		drawUI(g);
 	}
-
-	// private void drawAttackBox(Graphics g, int lvlOffsetX) {
-	// g.setColor(Color.red);
-	// g.drawRect((int) attackBox.x - lvlOffsetX, (int) attackBox.y, (int)
-	// attackBox.width, (int) attackBox.height);
-
-	// }
 
 	private void drawUI(Graphics g) {
 		g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
@@ -137,9 +135,7 @@ public class Player extends Entity {
 				attacking = false;
 				attackChecked = false;
 			}
-
 		}
-
 	}
 
 	private void setAnimation() {
@@ -180,9 +176,10 @@ public class Player extends Entity {
 		if (jump)
 			jump();
 
-		if (!inAir)
+		if (!inAir) {
 			if ((!left && !right) || (right && left))
 				return;
+		}
 
 		float xSpeed = 0;
 
@@ -197,9 +194,10 @@ public class Player extends Entity {
 			flipW = 1;
 		}
 
-		if (!inAir)
+		if (!inAir) {
 			if (!IsEntityOnFloor(hitbox, lvlData))
 				inAir = true;
+		}
 
 		if (inAir) {
 			if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
@@ -214,9 +212,10 @@ public class Player extends Entity {
 					airSpeed = fallSpeedAfterCollision;
 				updateXPos(xSpeed);
 			}
-
-		} else
+		} else {
 			updateXPos(xSpeed);
+		}
+
 		moving = true;
 	}
 
@@ -225,7 +224,6 @@ public class Player extends Entity {
 			return;
 		inAir = true;
 		airSpeed = jumpSpeed;
-
 	}
 
 	private void resetInAir() {
@@ -252,9 +250,11 @@ public class Player extends Entity {
 	private void loadAnimations() {
 		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 		animations = new BufferedImage[7][8];
-		for (int j = 0; j < animations.length; j++)
-			for (int i = 0; i < animations[j].length; i++)
+		for (int j = 0; j < animations.length; j++) {
+			for (int i = 0; i < animations[j].length; i++) {
 				animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
+			}
+		}
 
 		statusBarImg = LoadSave.GetSpriteAtlas(LoadSave.STATUS_BAR);
 	}
@@ -326,5 +326,4 @@ public class Player extends Entity {
 		if (!IsEntityOnFloor(hitbox, lvlData))
 			inAir = true;
 	}
-
 }

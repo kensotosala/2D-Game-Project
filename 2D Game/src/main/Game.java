@@ -1,10 +1,9 @@
 package main;
 
 import java.awt.Graphics;
-
 import gamestates.Gamestate;
-import gamestates.Playing;
 import gamestates.Menu;
+import gamestates.Playing;
 
 public class Game implements Runnable {
 
@@ -29,6 +28,7 @@ public class Game implements Runnable {
 
 		gamePanel = new GamePanel(this);
 		new GameWindow(gamePanel);
+		gamePanel.setFocusable(true);
 		gamePanel.requestFocus();
 
 		startGameLoop();
@@ -45,7 +45,6 @@ public class Game implements Runnable {
 	}
 
 	public void update() {
-
 		switch (Gamestate.state) {
 			case MENU:
 				menu.update();
@@ -53,14 +52,16 @@ public class Game implements Runnable {
 			case PLAYING:
 				playing.update();
 				break;
+			case OPTIONS:
+			case QUIT:
 			default:
+				System.exit(0);
 				break;
 
 		}
 	}
 
 	public void render(Graphics g) {
-
 		switch (Gamestate.state) {
 			case MENU:
 				menu.draw(g);
@@ -71,7 +72,6 @@ public class Game implements Runnable {
 			default:
 				break;
 		}
-
 	}
 
 	@Override
@@ -120,9 +120,8 @@ public class Game implements Runnable {
 	}
 
 	public void windowFocusLost() {
-		if (Gamestate.state == Gamestate.PLAYING) {
+		if (Gamestate.state == Gamestate.PLAYING)
 			playing.getPlayer().resetDirBooleans();
-		}
 	}
 
 	public Menu getMenu() {
@@ -132,5 +131,4 @@ public class Game implements Runnable {
 	public Playing getPlaying() {
 		return playing;
 	}
-
 }
