@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+
 import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
@@ -29,6 +30,11 @@ public class Playing extends State implements Statemethods {
 
     private boolean gameOver;
     private boolean lvlCompleted;
+
+    private int partidasJugadas = 0;
+    private int partidasGanadas = 0;
+    private int partidasPerdidas = 0;
+    private boolean lostGame = false;
 
     public Playing(Game game) {
         super(game);
@@ -61,7 +67,8 @@ public class Playing extends State implements Statemethods {
 
         pauseOverlay = new PauseOverlay(this);
         gameOverOverlay = new GameOverOverlay(this);
-        levelCompletedOverlay = new LevelCompletedOverlay(this);
+        levelCompletedOverlay = new LevelCompletedOverlay(this); // Corrected
+                                                                 // line
     }
 
     @Override
@@ -75,6 +82,15 @@ public class Playing extends State implements Statemethods {
             player.update();
             enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             checkCloseToBorder();
+        } else {
+            // Si el juego ha terminado (gameOver es verdadero), no es necesario
+            // incrementar partidas perdidas aquí.
+            // En lugar de eso, lo haremos en el método resetAll() si el juego se ha
+            // perdido.
+            if (!lostGame) {
+                lostGame = true; // Actualización: Marcamos el juego como perdido para evitar el incremento
+                                 // múltiple
+            }
         }
     }
 
@@ -115,6 +131,12 @@ public class Playing extends State implements Statemethods {
         lvlCompleted = false;
         player.resetAll();
         enemyManager.resetAllEnemies();
+
+        if (lostGame) {
+            incrementPartidasPerdidas(); // Incrementar el contador de partidas perdidas en 1
+            incrementPartidasJugadas(); // Incrementar el contador de partidas jugadas en 1
+            lostGame = false;
+        }
     }
 
     public void setGameOver(boolean gameOver) {
@@ -228,6 +250,31 @@ public class Playing extends State implements Statemethods {
 
     public EnemyManager getEnemyManager() {
         return enemyManager;
+    }
+
+    // Métodos para actualizar las estadísticas
+    public void incrementPartidasJugadas() {
+        partidasJugadas++;
+    }
+
+    public void incrementPartidasGanadas() {
+        partidasGanadas++;
+    }
+
+    public void incrementPartidasPerdidas() {
+        partidasPerdidas++;
+    }
+
+    public int getPartidasJugadas() {
+        return partidasJugadas;
+    }
+
+    public int getPartidasGanadas() {
+        return partidasGanadas;
+    }
+
+    public int getPartidasPerdidas() {
+        return partidasPerdidas;
     }
 
 }

@@ -13,81 +13,94 @@ import static utilz.Constants.UI.URMButtons.*;
 
 public class LevelCompletedOverlay {
 
-	private Playing playing;
-	private UrmButton menu, next;
-	private BufferedImage img;
-	private int bgX, bgY, bgW, bgH;
+    private Playing playing;
+    private UrmButton menu, next;
+    private BufferedImage img;
+    private int bgX, bgY, bgW, bgH;
 
-	public LevelCompletedOverlay(Playing playing) {
-		this.playing = playing;
-		initImg();
-		initButtons();
-	}
+    public LevelCompletedOverlay(Playing playing) {
+        this.playing = playing;
+        initImg();
+        initButtons();
+    }
 
-	private void initButtons() {
-		int menuX = (int) (330 * Game.SCALE);
-		int nextX = (int) (445 * Game.SCALE);
-		int y = (int) (195 * Game.SCALE);
-		next = new UrmButton(nextX, y, URM_SIZE, URM_SIZE, 0);
-		menu = new UrmButton(menuX, y, URM_SIZE, URM_SIZE, 2);
-	}
+    private void initButtons() {
+        int menuX = (int) (330 * Game.SCALE);
+        int nextX = (int) (445 * Game.SCALE);
+        int y = (int) (195 * Game.SCALE);
+        next = new UrmButton(nextX, y, URM_SIZE, URM_SIZE, 0);
+        menu = new UrmButton(menuX, y, URM_SIZE, URM_SIZE, 2);
+    }
 
-	private void initImg() {
-		img = LoadSave.GetSpriteAtlas(LoadSave.COMPLETED_IMG);
-		bgW = (int) (img.getWidth() * Game.SCALE);
-		bgH = (int) (img.getHeight() * Game.SCALE);
-		bgX = Game.GAME_WIDTH / 2 - bgW / 2;
-		bgY = (int) (75 * Game.SCALE);
-	}
+    private void initImg() {
+        img = LoadSave.GetSpriteAtlas(LoadSave.COMPLETED_IMG);
+        bgW = (int) (img.getWidth() * Game.SCALE);
+        bgH = (int) (img.getHeight() * Game.SCALE);
+        bgX = Game.GAME_WIDTH / 2 - bgW / 2;
+        bgY = (int) (75 * Game.SCALE);
+    }
 
-	public void draw(Graphics g) {
-		// Added after youtube upload
-		g.setColor(new Color(0, 0, 0, 200));
-		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+    public void draw(Graphics g) {
+        // Added after youtube upload
+        g.setColor(new Color(0, 0, 0, 200));
+        g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
 
-		g.drawImage(img, bgX, bgY, bgW, bgH, null);
-		next.draw(g);
-		menu.draw(g);
-	}
+        // Mostrar los contadores de estadísticas
+        int partidasJugadas = playing.getPartidasJugadas();
+        int partidasGanadas = playing.getPartidasGanadas();
+        int partidasPerdidas = playing.getPartidasPerdidas();
 
-	public void update() {
-		next.update();
-		menu.update();
-	}
+        g.setColor(Color.WHITE);
+        g.drawString("Partidas jugadas: " + partidasJugadas, 10, 20);
+        g.drawString("Partidas ganadas: " + partidasGanadas, 10, 40);
+        g.drawString("Partidas perdidas: " + partidasPerdidas, 10, 60);
 
-	private boolean isIn(UrmButton b, MouseEvent e) {
-		return b.getBounds().contains(e.getX(), e.getY());
-	}
+        g.drawImage(img, bgX, bgY, bgW, bgH, null);
+        next.draw(g);
+        menu.draw(g);
+    }
 
-	public void mouseMoved(MouseEvent e) {
-		next.setMouseOver(false);
-		menu.setMouseOver(false);
+    public void update() {
+        next.update();
+        menu.update();
+    }
 
-		if (isIn(menu, e))
-			menu.setMouseOver(true);
-		else if (isIn(next, e))
-			next.setMouseOver(true);
-	}
+    private boolean isIn(UrmButton b, MouseEvent e) {
+        return b.getBounds().contains(e.getX(), e.getY());
+    }
 
-	public void mouseReleased(MouseEvent e) {
-		if (isIn(menu, e)) {
-			if (menu.isMousePressed()) {
-				playing.resetAll();
-				Gamestate.state = Gamestate.MENU;
-			}
-		} else if (isIn(next, e))
-			if (next.isMousePressed())
-				playing.loadNextLevel();
+    public void mouseMoved(MouseEvent e) {
+        next.setMouseOver(false);
+        menu.setMouseOver(false);
 
-		menu.resetBools();
-		next.resetBools();
-	}
+        if (isIn(menu, e))
+            menu.setMouseOver(true);
+        else if (isIn(next, e))
+            next.setMouseOver(true);
+    }
 
-	public void mousePressed(MouseEvent e) {
-		if (isIn(menu, e))
-			menu.setMousePressed(true);
-		else if (isIn(next, e))
-			next.setMousePressed(true);
-	}
+    public void mouseReleased(MouseEvent e) {
+        if (isIn(menu, e)) {
+            if (menu.isMousePressed()) {
+                playing.resetAll();
+                Gamestate.state = Gamestate.MENU;
+            }
+        } else if (isIn(next, e)) {
+            if (next.isMousePressed()) {
+                playing.loadNextLevel();
+                playing.incrementPartidasJugadas();
+                playing.incrementPartidasGanadas();
+            }
+        }
 
+        menu.resetBools();
+        next.resetBools();
+    }
+
+    public void mousePressed(MouseEvent e) {
+        if (isIn(menu, e))
+            menu.setMousePressed(true);
+        else if (isIn(next, e))
+            next.setMousePressed(true);
+    }
 }
