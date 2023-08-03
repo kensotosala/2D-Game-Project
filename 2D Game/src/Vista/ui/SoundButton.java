@@ -12,6 +12,7 @@ public class SoundButton extends PauseButton {
 	private boolean mouseOver, mousePressed;
 	private boolean muted;
 	private int rowIndex, colIndex;
+	LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
 	public SoundButton(int x, int y, int width, int height) {
 		super(x, y, width, height);
@@ -20,11 +21,12 @@ public class SoundButton extends PauseButton {
 	}
 
 	private void loadSoundImgs() {
-		BufferedImage temp = LoadSave.GetSpriteAtlas(LoadSave.SOUND_BUTTONS);
+		BufferedImage temp = loadSave.GetSpriteAtlas(loadSave.SOUND_BUTTONS);
 		soundImgs = new BufferedImage[2][3];
 		for (int j = 0; j < soundImgs.length; j++)
 			for (int i = 0; i < soundImgs[j].length; i++)
-				soundImgs[j][i] = temp.getSubimage(i * SOUND_SIZE_DEFAULT, j * SOUND_SIZE_DEFAULT, SOUND_SIZE_DEFAULT, SOUND_SIZE_DEFAULT);
+				soundImgs[j][i] = temp.getSubimage(i * SOUND_SIZE_DEFAULT, j * SOUND_SIZE_DEFAULT, SOUND_SIZE_DEFAULT,
+						SOUND_SIZE_DEFAULT);
 	}
 
 	public void update() {

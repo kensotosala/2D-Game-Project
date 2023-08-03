@@ -14,6 +14,7 @@ public class LevelManager {
 	private BufferedImage[] levelSprite;
 	private ArrayList<Level> levels;
 	private int lvlIndex = 0;
+	LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
 	public LevelManager(Game game) {
 		this.game = game;
@@ -37,13 +38,13 @@ public class LevelManager {
 	}
 
 	private void buildAllLevels() {
-		BufferedImage[] allLevels = LoadSave.GetAllLevels();
+		BufferedImage[] allLevels = loadSave.GetAllLevels();
 		for (BufferedImage img : allLevels)
 			levels.add(new Level(img));
 	}
 
 	private void importOutsideSprites() {
-		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS);
+		BufferedImage img = loadSave.GetSpriteAtlas(loadSave.LEVEL_ATLAS);
 		levelSprite = new BufferedImage[48];
 		for (int j = 0; j < 4; j++)
 			for (int i = 0; i < 12; i++) {

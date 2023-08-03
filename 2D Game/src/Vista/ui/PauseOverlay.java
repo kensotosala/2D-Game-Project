@@ -20,6 +20,7 @@ public class PauseOverlay {
 	private SoundButton musicButton, sfxButton;
 	private UrmButton menuB, replayB, unpauseB;
 	private VolumeButton volumeButton;
+	LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
 	public PauseOverlay(Playing playing) {
 		this.playing = playing;
@@ -56,7 +57,7 @@ public class PauseOverlay {
 	}
 
 	private void loadBackground() {
-		backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.PAUSE_BACKGROUND);
+		backgroundImg = loadSave.GetSpriteAtlas(loadSave.PAUSE_BACKGROUND);
 		bgW = (int) (backgroundImg.getWidth() * Game.SCALE);
 		bgH = (int) (backgroundImg.getHeight() * Game.SCALE);
 		bgX = Game.GAME_WIDTH / 2 - bgW / 2;

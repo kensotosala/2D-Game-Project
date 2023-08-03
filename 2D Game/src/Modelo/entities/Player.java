@@ -56,6 +56,7 @@ public class Player extends Entity {
 
 	private boolean attackChecked;
 	private Playing playing;
+	LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
 	public Player(float x, float y, int width, int height, Playing playing) {
 		super(x, y, width, height);
@@ -248,7 +249,7 @@ public class Player extends Entity {
 	}
 
 	private void loadAnimations() {
-		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+		BufferedImage img = loadSave.GetSpriteAtlas(loadSave.PLAYER_ATLAS);
 		animations = new BufferedImage[7][8];
 		for (int j = 0; j < animations.length; j++) {
 			for (int i = 0; i < animations[j].length; i++) {
@@ -256,7 +257,7 @@ public class Player extends Entity {
 			}
 		}
 
-		statusBarImg = LoadSave.GetSpriteAtlas(LoadSave.STATUS_BAR);
+		statusBarImg = loadSave.GetSpriteAtlas(loadSave.STATUS_BAR);
 	}
 
 	public void loadLvlData(int[][] lvlData) {

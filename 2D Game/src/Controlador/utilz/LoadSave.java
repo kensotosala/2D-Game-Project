@@ -11,20 +11,20 @@ import javax.imageio.ImageIO;
 
 public class LoadSave {
 
-	public static final String PLAYER_ATLAS = "resources/player_sprites_test.png";
-	public static final String LEVEL_ATLAS = "resources/OutsideSpritesSonic2.png";
-	public static final String MENU_BUTTONS = "resources/button_atlas.png";
-	public static final String MENU_BACKGROUND = "resources/menu_background.png";
-	public static final String PAUSE_BACKGROUND = "resources/pause_menu.png";
-	public static final String SOUND_BUTTONS = "resources/sound_button.png";
-	public static final String URM_BUTTONS = "resources/urm_buttons.png";
-	public static final String VOLUME_BUTTONS = "resources/volume_buttons.png";
-	public static final String MENU_BACKGROUND_IMG = "resources/background_menu.png";
-	public static final String CRABMEAT_SPRITE = "resources/crabmeat-sprite.png";
-	public static final String STATUS_BAR = "resources/health_power_bar.png";
-	public static final String COMPLETED_IMG = "resources/completed_sprite.png";
+	public final String PLAYER_ATLAS = "resources/player_sprites_test.png";
+	public final String LEVEL_ATLAS = "resources/OutsideSpritesSonic2.png";
+	public final String MENU_BUTTONS = "resources/button_atlas.png";
+	public final String MENU_BACKGROUND = "resources/menu_background.png";
+	public final String PAUSE_BACKGROUND = "resources/pause_menu.png";
+	public final String SOUND_BUTTONS = "resources/sound_button.png";
+	public final String URM_BUTTONS = "resources/urm_buttons.png";
+	public final String VOLUME_BUTTONS = "resources/volume_buttons.png";
+	public final String MENU_BACKGROUND_IMG = "resources/background_menu.png";
+	public final String CRABMEAT_SPRITE = "resources/crabmeat-sprite.png";
+	public final String STATUS_BAR = "resources/health_power_bar.png";
+	public final String COMPLETED_IMG = "resources/completed_sprite.png";
 
-	public static BufferedImage GetSpriteAtlas(String fileName) {
+	public BufferedImage GetSpriteAtlas(String fileName) {
 		BufferedImage img = null;
 		try {
 			InputStream is = LoadSave.class.getClassLoader().getResourceAsStream(fileName);
@@ -40,7 +40,7 @@ public class LoadSave {
 		return img;
 	}
 
-	public static BufferedImage[] GetAllLevels() {
+	public BufferedImage[] GetAllLevels() {
 		URL url = LoadSave.class.getResource("/resources/lvls");
 		File file = null;
 

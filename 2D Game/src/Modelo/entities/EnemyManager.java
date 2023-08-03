@@ -12,6 +12,7 @@ public class EnemyManager {
     private Playing playing;
     private BufferedImage[][] crabmeatArr;
     private Crabmeat[] crabmeats;
+    LoadSave loadSave = new LoadSave();
 
     public EnemyManager(Playing playing) {
         this.playing = playing;
@@ -68,7 +69,7 @@ public class EnemyManager {
 
     private void loadEnemyImgs() {
         crabmeatArr = new BufferedImage[5][9];
-        BufferedImage temp = LoadSave.GetSpriteAtlas(LoadSave.CRABMEAT_SPRITE);
+        BufferedImage temp = loadSave.GetSpriteAtlas(loadSave.CRABMEAT_SPRITE);
         for (int j = 0; j < crabmeatArr.length; j++)
             for (int i = 0; i < crabmeatArr[j].length; i++)
                 crabmeatArr[j][i] = temp.getSubimage(i * CRABMEAT_WIDTH_DEFAULT, j * CRABMEAT_HEIGHT_DEFAULT,

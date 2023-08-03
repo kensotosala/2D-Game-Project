@@ -10,6 +10,7 @@ public class UrmButton extends PauseButton {
     private BufferedImage[] imgs;
     private int rowIndex, index;
     private boolean mouseOver, mousePressed;
+    LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
     public UrmButton(int x, int y, int width, int height, int rowIndex) {
         super(x, y, width, height);
@@ -18,7 +19,7 @@ public class UrmButton extends PauseButton {
     }
 
     private void loadImgs() {
-        BufferedImage temp = LoadSave.GetSpriteAtlas(LoadSave.URM_BUTTONS);
+        BufferedImage temp = loadSave.GetSpriteAtlas(loadSave.URM_BUTTONS);
         imgs = new BufferedImage[3];
         for (int i = 0; i < imgs.length; i++)
             imgs[i] = temp.getSubimage(i * URM_DEFAULT_SIZE, rowIndex * URM_DEFAULT_SIZE, URM_DEFAULT_SIZE,

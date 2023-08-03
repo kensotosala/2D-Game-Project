@@ -17,6 +17,7 @@ public class LevelCompletedOverlay {
     private UrmButton menu, next;
     private BufferedImage img;
     private int bgX, bgY, bgW, bgH;
+    LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
     public LevelCompletedOverlay(Playing playing) {
         this.playing = playing;
@@ -33,7 +34,7 @@ public class LevelCompletedOverlay {
     }
 
     private void initImg() {
-        img = LoadSave.GetSpriteAtlas(LoadSave.COMPLETED_IMG);
+        img = loadSave.GetSpriteAtlas(loadSave.COMPLETED_IMG);
         bgW = (int) (img.getWidth() * Game.SCALE);
         bgH = (int) (img.getHeight() * Game.SCALE);
         bgX = Game.GAME_WIDTH / 2 - bgW / 2;

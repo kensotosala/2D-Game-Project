@@ -15,16 +15,17 @@ public class Menu extends State implements Statemethods {
 	private BufferedImage backgroundImg;
 	private BufferedImage backgroundImageMain;
 	private int menuX, menuY, menuWidth, menuHeight;
+	LoadSave loadSave = new LoadSave();
 
 	public Menu(Game game) {
 		super(game);
 		loadButtons();
 		loadBackground();
-		backgroundImageMain = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND_IMG);
+		backgroundImageMain = loadSave.GetSpriteAtlas(loadSave.MENU_BACKGROUND_IMG);
 	}
 
 	private void loadBackground() {
-		backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND);
+		backgroundImg = loadSave.GetSpriteAtlas(loadSave.MENU_BACKGROUND);
 		menuWidth = (int) (backgroundImg.getWidth() * Game.SCALE);
 		menuHeight = (int) (backgroundImg.getHeight() * Game.SCALE);
 		menuX = Game.GAME_WIDTH / 2 - menuWidth / 2;
@@ -56,7 +57,6 @@ public class Menu extends State implements Statemethods {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -112,7 +112,6 @@ public class Menu extends State implements Statemethods {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -15,6 +15,7 @@ public class MenuButton {
     private BufferedImage[] imgs;
     private boolean mouseOver, mousePressed;
     private Rectangle bounds;
+    LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
     public MenuButton(int xPos, int yPos, int rowIndex, Gamestate state) {
         this.xPos = xPos;
@@ -32,7 +33,7 @@ public class MenuButton {
 
     private void loadImgs() {
         imgs = new BufferedImage[3];
-        BufferedImage temp = LoadSave.GetSpriteAtlas(LoadSave.MENU_BUTTONS);
+        BufferedImage temp = loadSave.GetSpriteAtlas(loadSave.MENU_BUTTONS);
         for (int i = 0; i < imgs.length; i++)
             imgs[i] = temp.getSubimage(i * B_WIDTH_DEFAULT, rowIndex * B_HEIGHT_DEFAULT, B_WIDTH_DEFAULT,
                     B_HEIGHT_DEFAULT);
