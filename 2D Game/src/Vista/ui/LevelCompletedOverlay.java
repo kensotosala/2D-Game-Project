@@ -9,10 +9,11 @@ import gamestates.Gamestate;
 import gamestates.Playing;
 import main.Game;
 import utilz.LoadSave;
-import static utilz.Constants.UI.URMButtons.*;
+import utilz.URMButtons;
 
 public class LevelCompletedOverlay {
 
+    private URMButtons urmButtons = new URMButtons();
     private Playing playing;
     private UrmButton menu, next;
     private BufferedImage img;
@@ -29,8 +30,8 @@ public class LevelCompletedOverlay {
         int menuX = (int) (330 * Game.SCALE);
         int nextX = (int) (445 * Game.SCALE);
         int y = (int) (195 * Game.SCALE);
-        next = new UrmButton(nextX, y, URM_SIZE, URM_SIZE, 0);
-        menu = new UrmButton(menuX, y, URM_SIZE, URM_SIZE, 2);
+        next = new UrmButton(nextX, y, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 0);
+        menu = new UrmButton(menuX, y, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 2);
     }
 
     private void initImg() {

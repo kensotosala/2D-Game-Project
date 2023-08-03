@@ -5,12 +5,13 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import gamestates.Gamestate;
+import utilz.Buttons;
 import utilz.LoadSave;
-import static utilz.Constants.UI.Buttons.*;
 
 public class MenuButton {
+    private Buttons buttons = new Buttons();
     private int xPos, yPos, rowIndex, index;
-    private int xOffsetCenter = B_WIDTH / 2;
+    private int xOffsetCenter = buttons.B_WIDTH / 2;
     private Gamestate state;
     private BufferedImage[] imgs;
     private boolean mouseOver, mousePressed;
@@ -27,7 +28,7 @@ public class MenuButton {
     }
 
     private void initBounds() {
-        bounds = new Rectangle(xPos - xOffsetCenter, yPos, B_WIDTH, B_HEIGHT);
+        bounds = new Rectangle(xPos - xOffsetCenter, yPos, buttons.B_WIDTH, buttons.B_HEIGHT);
 
     }
 
@@ -35,12 +36,13 @@ public class MenuButton {
         imgs = new BufferedImage[3];
         BufferedImage temp = loadSave.GetSpriteAtlas(loadSave.MENU_BUTTONS);
         for (int i = 0; i < imgs.length; i++)
-            imgs[i] = temp.getSubimage(i * B_WIDTH_DEFAULT, rowIndex * B_HEIGHT_DEFAULT, B_WIDTH_DEFAULT,
-                    B_HEIGHT_DEFAULT);
+            imgs[i] = temp.getSubimage(i * buttons.B_WIDTH_DEFAULT, rowIndex * buttons.B_HEIGHT_DEFAULT,
+                    buttons.B_WIDTH_DEFAULT,
+                    buttons.B_HEIGHT_DEFAULT);
     }
 
     public void draw(Graphics g) {
-        g.drawImage(imgs[index], xPos - xOffsetCenter, yPos, B_WIDTH, B_HEIGHT, null);
+        g.drawImage(imgs[index], xPos - xOffsetCenter, yPos, buttons.B_WIDTH, buttons.B_HEIGHT, null);
     }
 
     public void update() {

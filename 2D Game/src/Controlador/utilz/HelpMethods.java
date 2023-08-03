@@ -1,7 +1,5 @@
 package utilz;
 
-import static utilz.Constants.EnemyConstants.CRABMEAT;
-
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
@@ -10,6 +8,8 @@ import entities.Crabmeat;
 import main.Game;
 
 public class HelpMethods {
+
+    private EnemyConstants enemyConstants = new EnemyConstants();
 
     public boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) {
         if (!IsSolid(x, y, lvlData))
@@ -119,7 +119,7 @@ public class HelpMethods {
             for (int i = 0; i < img.getWidth(); i++) {
                 Color color = new Color(img.getRGB(i, j));
                 int value = color.getGreen();
-                if (value == CRABMEAT) {
+                if (value == enemyConstants.CRABMEAT) {
                     crabmeatCount++;
                 }
             }
@@ -132,8 +132,8 @@ public class HelpMethods {
             for (int i = 0; i < img.getWidth(); i++) {
                 Color color = new Color(img.getRGB(i, j));
                 int value = color.getGreen();
-                if (value == CRABMEAT) {
-                    crabs[crabIndex] = new Crabmeat(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
+                if (value == enemyConstants.CRABMEAT) {
+                    crabs[crabIndex] = new Crabmeat(i * Game.TILES_SIZE, j * Game.TILES_SIZE, enemyConstants);
                     crabIndex++;
                 }
             }

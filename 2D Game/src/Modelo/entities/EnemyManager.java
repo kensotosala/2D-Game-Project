@@ -5,14 +5,15 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import gamestates.Playing;
+import utilz.EnemyConstants;
 import utilz.LoadSave;
-import static utilz.Constants.EnemyConstants.*;
 
 public class EnemyManager {
     private Playing playing;
     private BufferedImage[][] crabmeatArr;
     private Crabmeat[] crabmeats;
     LoadSave loadSave = new LoadSave();
+    EnemyConstants enemyConstants = new EnemyConstants();
 
     public EnemyManager(Playing playing) {
         this.playing = playing;
@@ -47,12 +48,14 @@ public class EnemyManager {
         for (int i = 0; i < crabmeats.length; i++) {
             Crabmeat c = crabmeats[i];
             if (c.isActive()) {
-                g.drawImage(crabmeatArr[c.getEnemyState()][c.getAniIndex()],
-                        (int) c.getHitbox().x - xLvlOffset - CRABMEAT_DRAWOFFSET_X + c.flipX(),
-                        (int) c.getHitbox().y - CRABMEAT_DRAWOFFSET_Y,
-                        CRABMEAT_WIDTH * c.flipW(), CRABMEAT_HEIGHT, null);
-                // c.drawHitbox(g, xLvlOffset);
-                // c.drawAttackBox(g, xLvlOffset);
+                BufferedImage[][] enemySprites = enemyConstants.GetEnemySprites(c.getEnemyType());
+                if (enemySprites != null) { // Make sure the sprites are not null
+                    g.drawImage(enemySprites[c.getEnemyState()][c.getAniIndex()],
+                            (int) c.getHitbox().x - xLvlOffset - enemyConstants.CRABMEAT_DRAWOFFSET_X + c.flipX(),
+                            (int) c.getHitbox().y - enemyConstants.CRABMEAT_DRAWOFFSET_Y,
+                            enemySprites[c.getEnemyState()][c.getAniIndex()].getWidth(),
+                            enemySprites[c.getEnemyState()][c.getAniIndex()].getHeight(), null);
+                }
             }
         }
     }
@@ -72,8 +75,9 @@ public class EnemyManager {
         BufferedImage temp = loadSave.GetSpriteAtlas(loadSave.CRABMEAT_SPRITE);
         for (int j = 0; j < crabmeatArr.length; j++)
             for (int i = 0; i < crabmeatArr[j].length; i++)
-                crabmeatArr[j][i] = temp.getSubimage(i * CRABMEAT_WIDTH_DEFAULT, j * CRABMEAT_HEIGHT_DEFAULT,
-                        CRABMEAT_WIDTH_DEFAULT, CRABMEAT_HEIGHT_DEFAULT);
+                crabmeatArr[j][i] = temp.getSubimage(i * enemyConstants.CRABMEAT_WIDTH_DEFAULT,
+                        j * enemyConstants.CRABMEAT_HEIGHT_DEFAULT,
+                        enemyConstants.CRABMEAT_WIDTH_DEFAULT, enemyConstants.CRABMEAT_HEIGHT_DEFAULT);
 
     }
 

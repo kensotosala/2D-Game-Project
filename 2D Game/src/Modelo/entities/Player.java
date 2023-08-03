@@ -1,6 +1,5 @@
 package entities;
 
-import static utilz.Constants.PlayerConstants.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -11,11 +10,13 @@ import gamestates.Playing;
 import main.Game;
 import utilz.HelpMethods;
 import utilz.LoadSave;
+import utilz.PlayerConstants;
 
 public class Player extends Entity {
+	private PlayerConstants playerConstants = new PlayerConstants();
 	private BufferedImage[][] animations;
 	private int aniTick, aniIndex, aniSpeed = 25;
-	private int playerAction = IDLE;
+	private int playerAction = playerConstants.IDLE;
 	private boolean moving = false, attacking = false;
 	private boolean left, up, right, down, jump;
 	private float playerSpeed = 1.0f * Game.SCALE;
@@ -131,7 +132,7 @@ public class Player extends Entity {
 		if (aniTick >= aniSpeed) {
 			aniTick = 0;
 			aniIndex++;
-			if (aniIndex >= GetSpriteAmount(playerAction)) {
+			if (aniIndex >= playerConstants.GetSpriteAmount(playerAction)) {
 				aniIndex = 0;
 				attacking = false;
 				attackChecked = false;
@@ -143,20 +144,20 @@ public class Player extends Entity {
 		int startAni = playerAction;
 
 		if (moving)
-			playerAction = RUNNING;
+			playerAction = playerConstants.RUNNING;
 		else
-			playerAction = IDLE;
+			playerAction = playerConstants.IDLE;
 
 		if (inAir) {
 			if (airSpeed < 0)
-				playerAction = JUMP;
+				playerAction = playerConstants.JUMP;
 			else
-				playerAction = FALLING;
+				playerAction = playerConstants.FALLING;
 		}
 
 		if (attacking) {
-			playerAction = ATTACK;
-			if (startAni != ATTACK) {
+			playerAction = playerConstants.ATTACK;
+			if (startAni != playerConstants.ATTACK) {
 				aniIndex = 1;
 				aniTick = 0;
 				return;
@@ -318,7 +319,7 @@ public class Player extends Entity {
 		inAir = false;
 		attacking = false;
 		moving = false;
-		playerAction = IDLE;
+		playerAction = playerConstants.IDLE;
 		currentHealth = maxHealth;
 
 		hitbox.x = x;

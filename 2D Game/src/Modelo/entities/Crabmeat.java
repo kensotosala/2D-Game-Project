@@ -1,22 +1,24 @@
-package entities;
 
-import static utilz.Constants.EnemyConstants.*;
+package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
-import static utilz.Constants.Directions.*;
-
 import main.Game;
+import utilz.EnemyConstants;
 
 public class Crabmeat extends Enemy {
 
+    private static final int RIGHT = 0;
     private Rectangle2D.Float attackBox;
     private int attackBoxOffsetX;
+    private EnemyConstants enemyConstants;
 
-    public Crabmeat(float x, float y) {
-        super(x, y, CRABMEAT_WIDTH, CRABMEAT_HEIGHT, CRABMEAT);
+    public Crabmeat(float x, float y, EnemyConstants enemyConstants) {
+        super(x, y, enemyConstants.getCrabmeatWidth(), enemyConstants.getCrabmeatHeight(),
+                enemyConstants.CRABMEAT);
+        this.enemyConstants = enemyConstants;
         initHitbox(x, y, (int) (22 * Game.SCALE), (int) (19 * Game.SCALE));
         initAttackBox();
     }
@@ -44,27 +46,23 @@ public class Crabmeat extends Enemy {
         if (inAir)
             updateInAir(lvlData);
         else {
-            switch (enemyState) {
-                case IDLE:
-                    newState(RUNNING);
-                    break;
-                case RUNNING:
-                    if (canSeePlayer(lvlData, player)) {
-                        turnTowardsPlayer(player);
-                        if (isPlayerCloseForAttack(player))
-                            newState(ATTACK);
-                    }
+            if (enemyState == enemyConstants.IDLE) {
+                newState(enemyConstants.RUNNING);
+            } else if (enemyState == enemyConstants.RUNNING) {
+                if (canSeePlayer(lvlData, player)) {
+                    turnTowardsPlayer(player);
+                    if (isPlayerCloseForAttack(player))
+                        newState(enemyConstants.ATTACK);
+                }
 
-                    move(lvlData);
-                    break;
-                case ATTACK:
-                    if (aniIndex == 0)
-                        attackChecked = false;
-                    if (aniIndex == 3 && !attackChecked)
-                        checkPlayerHit(attackBox, player);
-                    break;
-                case HIT:
-                    break;
+                move(lvlData);
+            } else if (enemyState == enemyConstants.ATTACK) {
+                if (aniIndex == 0)
+                    attackChecked = false;
+                if (aniIndex == 3 && !attackChecked)
+                    checkPlayerHit(attackBox, player);
+            } else if (enemyState == enemyConstants.HIT) {
+                // Do something for the HIT state
             }
         }
     }
@@ -86,5 +84,9 @@ public class Crabmeat extends Enemy {
             return -1;
         else
             return 1;
+    }
+
+    public int getEnemyType() {
+        return enemyType;
     }
 }

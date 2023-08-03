@@ -4,13 +4,14 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import utilz.LoadSave;
-import static utilz.Constants.UI.URMButtons.*;
+import utilz.URMButtons;
 
 public class UrmButton extends PauseButton {
     private BufferedImage[] imgs;
     private int rowIndex, index;
     private boolean mouseOver, mousePressed;
     LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
+    private URMButtons urmButton = new URMButtons();
 
     public UrmButton(int x, int y, int width, int height, int rowIndex) {
         super(x, y, width, height);
@@ -22,8 +23,9 @@ public class UrmButton extends PauseButton {
         BufferedImage temp = loadSave.GetSpriteAtlas(loadSave.URM_BUTTONS);
         imgs = new BufferedImage[3];
         for (int i = 0; i < imgs.length; i++)
-            imgs[i] = temp.getSubimage(i * URM_DEFAULT_SIZE, rowIndex * URM_DEFAULT_SIZE, URM_DEFAULT_SIZE,
-                    URM_DEFAULT_SIZE);
+            imgs[i] = temp.getSubimage(i * urmButton.URM_DEFAULT_SIZE, rowIndex * urmButton.URM_DEFAULT_SIZE,
+                    urmButton.URM_DEFAULT_SIZE,
+                    urmButton.URM_DEFAULT_SIZE);
 
     }
 
@@ -37,7 +39,7 @@ public class UrmButton extends PauseButton {
     }
 
     public void draw(Graphics g) {
-        g.drawImage(imgs[index], x, y, URM_SIZE, URM_SIZE, null);
+        g.drawImage(imgs[index], x, y, urmButton.URM_SIZE, urmButton.URM_SIZE, null);
     }
 
     public void resetBools() {

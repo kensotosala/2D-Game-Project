@@ -8,19 +8,22 @@ import gamestates.Gamestate;
 import gamestates.Playing;
 import main.Game;
 import utilz.LoadSave;
-import static utilz.Constants.UI.PauseButtons.*;
-import static utilz.Constants.UI.URMButtons.*;
-import static utilz.Constants.UI.VolumeButtons.*;
+import utilz.PauseButtons;
+import utilz.URMButtons;
+import utilz.VolumeButtons;
 
 public class PauseOverlay {
 
+	private URMButtons urmButtons = new URMButtons();
 	private Playing playing;
 	private BufferedImage backgroundImg;
 	private int bgX, bgY, bgW, bgH;
 	private SoundButton musicButton, sfxButton;
 	private UrmButton menuB, replayB, unpauseB;
+	private LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
+	private VolumeButtons volumeButtonObject = new VolumeButtons();
 	private VolumeButton volumeButton;
-	LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
+	private PauseButtons pauseButton = new PauseButtons();
 
 	public PauseOverlay(Playing playing) {
 		this.playing = playing;
@@ -34,7 +37,8 @@ public class PauseOverlay {
 	private void createVolumeButton() {
 		int vX = (int) (309 * Game.SCALE);
 		int vY = (int) (278 * Game.SCALE);
-		volumeButton = new VolumeButton(vX, vY, SLIDER_WIDTH, VOLUME_HEIGHT);
+		volumeButton = new VolumeButton(vX, vY, volumeButtonObject.SLIDER_WIDTH, volumeButtonObject.VOLUME_HEIGHT,
+				volumeButtonObject);
 	}
 
 	private void createUrmButtons() {
@@ -43,17 +47,17 @@ public class PauseOverlay {
 		int unpauseX = (int) (462 * Game.SCALE);
 		int bY = (int) (325 * Game.SCALE);
 
-		menuB = new UrmButton(menuX, bY, URM_SIZE, URM_SIZE, 2);
-		replayB = new UrmButton(replayX, bY, URM_SIZE, URM_SIZE, 1);
-		unpauseB = new UrmButton(unpauseX, bY, URM_SIZE, URM_SIZE, 0);
+		menuB = new UrmButton(menuX, bY, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 2);
+		replayB = new UrmButton(replayX, bY, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 1);
+		unpauseB = new UrmButton(unpauseX, bY, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 0);
 	}
 
 	private void createSoundButtons() {
 		int soundX = (int) (450 * Game.SCALE);
 		int musicY = (int) (140 * Game.SCALE);
 		int sfxY = (int) (186 * Game.SCALE);
-		musicButton = new SoundButton(soundX, musicY, SOUND_SIZE, SOUND_SIZE);
-		sfxButton = new SoundButton(soundX, sfxY, SOUND_SIZE, SOUND_SIZE);
+		musicButton = new SoundButton(soundX, musicY, pauseButton.SOUND_SIZE, pauseButton.SOUND_SIZE);
+		sfxButton = new SoundButton(soundX, sfxY, pauseButton.SOUND_SIZE, pauseButton.SOUND_SIZE);
 	}
 
 	private void loadBackground() {

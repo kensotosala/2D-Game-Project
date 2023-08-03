@@ -1,11 +1,10 @@
 package entities;
 
-import static utilz.Constants.EnemyConstants.*;
 import java.awt.geom.Rectangle2D;
 
-import static utilz.Constants.Directions.*;
-
 import main.Game;
+import utilz.Directions;
+import utilz.EnemyConstants;
 import utilz.HelpMethods;
 
 public abstract class Enemy extends Entity {
@@ -16,7 +15,6 @@ public abstract class Enemy extends Entity {
     protected float fallSpeed;
     protected float gravity = 0.04f * Game.SCALE;
     protected float walkSpeed = 0.35f * Game.SCALE;
-    protected int walkDir = LEFT;
     protected int tileY;
     protected float attackDistance = Game.TILES_SIZE;
     protected int maxHealth;
@@ -24,13 +22,29 @@ public abstract class Enemy extends Entity {
     protected boolean active = true;
     protected boolean attackChecked;
     private HelpMethods helpMethods = new HelpMethods();
+    protected EnemyConstants enemyConstants;
+    private Directions directions = new Directions();
+    protected int walkDir = directions.LEFT;
+    protected int IDLE;
+    protected int RUNNING;
+    protected int ATTACK;
+    protected int HIT;
+    protected int DEAD;
 
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
         this.enemyType = enemyType;
         initHitbox(x, y, width, height);
-        maxHealth = GetMaxHealth(enemyType);
+        enemyConstants = new EnemyConstants();
+        maxHealth = enemyConstants.GetMaxHealth(enemyType);
         currentHealth = maxHealth;
+
+        // Asignar los valores constantes según el tipo de enemigo
+        IDLE = enemyConstants.IDLE;
+        RUNNING = enemyConstants.RUNNING;
+        ATTACK = enemyConstants.ATTACK;
+        HIT = enemyConstants.HIT;
+        DEAD = enemyConstants.DEAD;
     }
 
     protected void firstUpdateCheck(int[][] lvlData) {
@@ -53,7 +67,7 @@ public abstract class Enemy extends Entity {
     protected void move(int[][] lvlData) {
         float xSpeed = 0;
 
-        if (walkDir == LEFT)
+        if (walkDir == directions.LEFT)
             xSpeed = -walkSpeed;
         else
             xSpeed = walkSpeed;
@@ -69,9 +83,9 @@ public abstract class Enemy extends Entity {
 
     protected void turnTowardsPlayer(Player player) {
         if (player.hitbox.x > hitbox.x)
-            walkDir = RIGHT;
+            walkDir = directions.RIGHT;
         else
-            walkDir = LEFT;
+            walkDir = directions.LEFT;
     }
 
     protected boolean canSeePlayer(int[][] lvlData, Player player) {
@@ -104,14 +118,14 @@ public abstract class Enemy extends Entity {
     public void hurt(int amount) {
         currentHealth -= amount;
         if (currentHealth <= 0)
-            newState(DEAD);
+            newState(enemyConstants.DEAD);
         else
-            newState(HIT);
+            newState(enemyConstants.HIT);
     }
 
     protected void checkPlayerHit(Rectangle2D.Float attackBox, Player player) {
         if (attackBox.intersects(player.hitbox))
-            player.changeHealth(-GetEnemyDmg(enemyType));
+            player.changeHealth(-enemyConstants.GetEnemyDmg(enemyType));
         attackChecked = true;
 
     }
@@ -121,22 +135,31 @@ public abstract class Enemy extends Entity {
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
-            if (aniIndex >= GetSpriteAmount(enemyType, enemyState)) {
+            if (aniIndex >= enemyConstants.GetSpriteAmount(enemyType, enemyState)) {
                 aniIndex = 0;
 
+                int nextState = enemyState;
                 switch (enemyState) {
-                    case ATTACK, HIT -> enemyState = IDLE;
-                    case DEAD -> active = false;
+                    case 2: // ATTACK
+                    case 3: // HIT
+                        nextState = 0; // IDLE
+                        break;
+                    case 4: // DEAD
+                        active = false;
+                        nextState = 4; // DEAD
+                        break;
                 }
+
+                enemyState = nextState;
             }
         }
     }
 
     protected void changeWalkDir() {
-        if (walkDir == LEFT)
-            walkDir = RIGHT;
+        if (walkDir == directions.LEFT)
+            walkDir = directions.RIGHT;
         else
-            walkDir = LEFT;
+            walkDir = directions.LEFT;
     }
 
     public void resetEnemy() {
@@ -144,7 +167,7 @@ public abstract class Enemy extends Entity {
         hitbox.y = y;
         firstUpdate = true;
         currentHealth = maxHealth;
-        newState(IDLE);
+        newState(enemyConstants.IDLE);
         active = true;
         fallSpeed = 0;
     }
