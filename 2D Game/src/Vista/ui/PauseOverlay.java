@@ -17,10 +17,16 @@ public class PauseOverlay {
 	private URMButtons urmButtons = new URMButtons();
 	private Playing playing;
 	private BufferedImage backgroundImg;
-	private int bgX, bgY, bgW, bgH;
-	private SoundButton musicButton, sfxButton;
-	private UrmButton menuB, replayB, unpauseB;
-	private LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
+	private int bgX;
+	private int bgY;
+	private int bgW;
+	private int bgH;
+	private SoundButton musicButton;
+	private SoundButton sfxButton;
+	private UrmButton menuB;
+	private UrmButton replayB;
+	private UrmButton unpauseB;
+	private LoadSave loadSave = new LoadSave();
 	private VolumeButtons volumeButtonObject = new VolumeButtons();
 	private VolumeButton volumeButton;
 	private PauseButtons pauseButton = new PauseButtons();

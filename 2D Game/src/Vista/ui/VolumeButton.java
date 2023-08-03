@@ -11,8 +11,11 @@ public class VolumeButton extends PauseButton {
     private BufferedImage[] imgs;
     private BufferedImage slider;
     private int index = 0;
-    private boolean mouseOver, mousePressed;
-    private int buttonX, minX, maxX;
+    private boolean mouseOver;
+    private boolean mousePressed;
+    private int buttonX;
+    private int minX;
+    private int maxX;
     private LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
     private VolumeButtons volumeButtons; // No lo inicializamos aquí
 

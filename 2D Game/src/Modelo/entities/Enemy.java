@@ -8,8 +8,11 @@ import utilz.EnemyConstants;
 import utilz.HelpMethods;
 
 public abstract class Enemy extends Entity {
-    protected int aniIndex, enemyState, enemyType;
-    protected int aniTick, aniSpeed = 25;
+    protected int aniIndex;
+    protected int enemyState;
+    protected int enemyType;
+    protected int aniTick = 25;
+    protected int aniSpeed = 25;
     protected boolean firstUpdate = true;
     protected boolean inAir;
     protected float fallSpeed;
