@@ -14,8 +14,11 @@ public class Menu extends State implements Statemethods {
 	private MenuButton[] buttons = new MenuButton[3];
 	private BufferedImage backgroundImg;
 	private BufferedImage backgroundImageMain;
-	private int menuX, menuY, menuWidth, menuHeight;
-	LoadSave loadSave = new LoadSave();
+	private int menuX;
+	private int menuY;
+	private int menuWidth;
+	private int menuHeight;
+	private LoadSave loadSave = new LoadSave();
 
 	public Menu(Game game) {
 		super(game);
