@@ -1,13 +1,12 @@
 package entities;
 
 import static utilz.Constants.EnemyConstants.*;
-import static utilz.HelpMethods.*;
-
 import java.awt.geom.Rectangle2D;
 
 import static utilz.Constants.Directions.*;
 
 import main.Game;
+import utilz.HelpMethods;
 
 public abstract class Enemy extends Entity {
     protected int aniIndex, enemyState, enemyType;
@@ -24,6 +23,7 @@ public abstract class Enemy extends Entity {
     protected int currentHealth;
     protected boolean active = true;
     protected boolean attackChecked;
+    private HelpMethods helpMethods = new HelpMethods();
 
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
@@ -34,18 +34,18 @@ public abstract class Enemy extends Entity {
     }
 
     protected void firstUpdateCheck(int[][] lvlData) {
-        if (!IsEntityOnFloor(hitbox, lvlData))
+        if (!helpMethods.IsEntityOnFloor(hitbox, lvlData))
             inAir = true;
         firstUpdate = false;
     }
 
     protected void updateInAir(int[][] lvlData) {
-        if (CanMoveHere(hitbox.x, hitbox.y + fallSpeed, hitbox.width, hitbox.height, lvlData)) {
+        if (helpMethods.CanMoveHere(hitbox.x, hitbox.y + fallSpeed, hitbox.width, hitbox.height, lvlData)) {
             hitbox.y += fallSpeed;
             fallSpeed += gravity;
         } else {
             inAir = false;
-            hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, fallSpeed);
+            hitbox.y = helpMethods.GetEntityYPosUnderRoofOrAboveFloor(hitbox, fallSpeed);
             tileY = (int) (hitbox.y / Game.TILES_SIZE);
         }
     }
@@ -58,8 +58,8 @@ public abstract class Enemy extends Entity {
         else
             xSpeed = walkSpeed;
 
-        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
-            if (IsFloor(hitbox, xSpeed, lvlData)) {
+        if (helpMethods.CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
+            if (helpMethods.IsFloor(hitbox, xSpeed, lvlData)) {
                 hitbox.x += xSpeed;
                 return;
             }
@@ -78,7 +78,7 @@ public abstract class Enemy extends Entity {
         int playerTileY = (int) (player.getHitbox().y / Game.TILES_SIZE);
         if (playerTileY == tileY)
             if (isPlayerInRange(player)) {
-                if (IsSightClear(lvlData, hitbox, player.hitbox, tileY))
+                if (helpMethods.IsSightClear(lvlData, hitbox, player.hitbox, tileY))
                     return true;
             }
 

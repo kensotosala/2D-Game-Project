@@ -4,9 +4,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import entities.Crabmeat;
 import main.Game;
-import static utilz.HelpMethods.GetCrabs;
-import static utilz.HelpMethods.GetLevelData;
-import static utilz.HelpMethods.GetPlayerSpawn;
+import utilz.HelpMethods;
 
 public class Level {
 
@@ -17,6 +15,7 @@ public class Level {
 	private int maxTilesOffset;
 	private int maxLvlOffsetX;
 	private Point playerSpawn;
+	private HelpMethods helpMethods = new HelpMethods();
 
 	public Level(BufferedImage img) {
 		this.img = img;
@@ -27,7 +26,7 @@ public class Level {
 	}
 
 	private void calcPlayerSpawn() {
-		playerSpawn = GetPlayerSpawn(img);
+		playerSpawn = helpMethods.GetPlayerSpawn(img);
 	}
 
 	private void calcLvlOffsets() {
@@ -37,11 +36,11 @@ public class Level {
 	}
 
 	private void createEnemies() {
-		crabmeats = GetCrabs(img);
+		crabmeats = helpMethods.GetCrabs(img);
 	}
 
 	private void createLevelData() {
-		lvlData = GetLevelData(img);
+		lvlData = helpMethods.GetLevelData(img);
 	}
 
 	public int getSpriteIndex(int x, int y) {

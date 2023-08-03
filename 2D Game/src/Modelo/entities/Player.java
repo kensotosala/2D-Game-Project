@@ -1,8 +1,6 @@
 package entities;
 
 import static utilz.Constants.PlayerConstants.*;
-import static utilz.HelpMethods.*;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -11,6 +9,7 @@ import java.awt.image.BufferedImage;
 
 import gamestates.Playing;
 import main.Game;
+import utilz.HelpMethods;
 import utilz.LoadSave;
 
 public class Player extends Entity {
@@ -47,6 +46,7 @@ public class Player extends Entity {
 	private int maxHealth = 10;
 	private int currentHealth = maxHealth;
 	private int healthWidth = healthBarWidth;
+	private HelpMethods helpMethods = new HelpMethods();
 
 	// AttackBox
 	private Rectangle2D.Float attackBox;
@@ -196,17 +196,17 @@ public class Player extends Entity {
 		}
 
 		if (!inAir) {
-			if (!IsEntityOnFloor(hitbox, lvlData))
+			if (!helpMethods.IsEntityOnFloor(hitbox, lvlData))
 				inAir = true;
 		}
 
 		if (inAir) {
-			if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+			if (helpMethods.CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
 				hitbox.y += airSpeed;
 				airSpeed += gravity;
 				updateXPos(xSpeed);
 			} else {
-				hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
+				hitbox.y = helpMethods.GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
 				if (airSpeed > 0)
 					resetInAir();
 				else
@@ -233,10 +233,10 @@ public class Player extends Entity {
 	}
 
 	private void updateXPos(float xSpeed) {
-		if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
+		if (helpMethods.CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
 			hitbox.x += xSpeed;
 		else
-			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
+			hitbox.x = helpMethods.GetEntityXPosNextToWall(hitbox, xSpeed);
 	}
 
 	public void changeHealth(int value) {
@@ -262,7 +262,7 @@ public class Player extends Entity {
 
 	public void loadLvlData(int[][] lvlData) {
 		this.lvlData = lvlData;
-		if (!IsEntityOnFloor(hitbox, lvlData))
+		if (!helpMethods.IsEntityOnFloor(hitbox, lvlData))
 			inAir = true;
 	}
 
@@ -324,7 +324,7 @@ public class Player extends Entity {
 		hitbox.x = x;
 		hitbox.y = y;
 
-		if (!IsEntityOnFloor(hitbox, lvlData))
+		if (!helpMethods.IsEntityOnFloor(hitbox, lvlData))
 			inAir = true;
 	}
 
