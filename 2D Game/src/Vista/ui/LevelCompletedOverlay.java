@@ -16,7 +16,10 @@ public class LevelCompletedOverlay {
     private Playing playing;
     private UrmButton menu, next;
     private BufferedImage img;
-    private int bgX, bgY, bgW, bgH;
+    private int bgX;
+    private int bgY;
+    private int bgW;
+    private int bgH;
     LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
     private final int TILES_DEFAULT_SIZE = 32;
     private final float SCALE = 2f;

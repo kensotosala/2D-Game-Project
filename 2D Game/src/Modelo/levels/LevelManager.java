@@ -2,7 +2,6 @@ package levels;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import gamestates.Gamestate;
 import main.Game;
@@ -10,32 +9,42 @@ import utilz.LoadSave;
 
 public class LevelManager {
 	private final int TILES_DEFAULT_SIZE = 32;
-	private final float SCALE = 2f;;
+	private final float SCALE = 2f;
 	private final int TILES_IN_HEIGHT = 14;
 	private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
 
 	private Game game;
 	private BufferedImage[] levelSprite;
-	private ArrayList<Level> levels;
+	private Node head; // Nodo principal de la LinkedList
 	private int lvlIndex = 0;
 	LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
 	public LevelManager(Game game) {
 		this.game = game;
 		importOutsideSprites();
-		levels = new ArrayList<>();
 		buildAllLevels();
+	}
+
+	// Clase Node para implementar la LinkedList
+	private class Node {
+		Level data;
+		Node next;
+
+		public Node(Level data) {
+			this.data = data;
+			next = null;
+		}
 	}
 
 	public void loadNextLevel() {
 		lvlIndex++;
-		if (lvlIndex >= levels.size()) {
+		if (lvlIndex >= getAmountOfLevels()) {
 			lvlIndex = 0;
 			System.out.println("No more levels! Game Completed!");
 			Gamestate.state = Gamestate.MENU;
 		}
 
-		Level newLevel = levels.get(lvlIndex);
+		Level newLevel = getLevelAtIndex(lvlIndex);
 		game.getPlaying().getEnemyManager().loadEnemies(newLevel);
 		game.getPlaying().getPlayer().loadLvlData(newLevel.getLevelData());
 		game.getPlaying().setMaxLvlOffset(newLevel.getLvlOffset());
@@ -43,8 +52,21 @@ public class LevelManager {
 
 	private void buildAllLevels() {
 		BufferedImage[] allLevels = loadSave.GetAllLevels();
-		for (BufferedImage img : allLevels)
-			levels.add(new Level(img));
+		head = null; // Inicializar la LinkedList con el nodo principal como null
+		Node current = null;
+
+		for (int i = 0; i < allLevels.length; i++) {
+			BufferedImage img = allLevels[i];
+			Level newLevel = new Level(img);
+			Node newNode = new Node(newLevel);
+			if (head == null) {
+				head = newNode;
+				current = head;
+			} else {
+				current.next = newNode;
+				current = current.next;
+			}
+		}
 	}
 
 	private void importOutsideSprites() {
@@ -59,8 +81,8 @@ public class LevelManager {
 
 	public void draw(Graphics g, int lvlOffset) {
 		for (int j = 0; j < TILES_IN_HEIGHT; j++)
-			for (int i = 0; i < levels.get(lvlIndex).getLevelData()[0].length; i++) {
-				int index = levels.get(lvlIndex).getSpriteIndex(i, j);
+			for (int i = 0; i < getCurrentLevel().getLevelData()[0].length; i++) {
+				int index = getCurrentLevel().getSpriteIndex(i, j);
 				g.drawImage(levelSprite[index], TILES_SIZE * i - lvlOffset, TILES_SIZE * j, TILES_SIZE,
 						TILES_SIZE, null);
 			}
@@ -71,11 +93,29 @@ public class LevelManager {
 	}
 
 	public Level getCurrentLevel() {
-		return levels.get(lvlIndex);
+		return getLevelAtIndex(lvlIndex);
 	}
 
 	public int getAmountOfLevels() {
-		return levels.size();
+		int count = 0;
+		Node current = head;
+		while (current != null) {
+			count++;
+			current = current.next;
+		}
+		return count;
 	}
 
+	private Level getLevelAtIndex(int index) {
+		int count = 0;
+		Node current = head;
+		while (current != null) {
+			if (count == index) {
+				return current.data;
+			}
+			count++;
+			current = current.next;
+		}
+		throw new IndexOutOfBoundsException("Index out of range: " + index);
+	}
 }
