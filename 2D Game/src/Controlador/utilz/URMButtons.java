@@ -1,8 +1,7 @@
 package utilz;
 
-import main.Game;
-
 public class URMButtons {
+    private final float SCALE = 2f;
     public final int URM_DEFAULT_SIZE = 56;
-    public final int URM_SIZE = (int) (URM_DEFAULT_SIZE * Game.SCALE);
+    public final int URM_SIZE = (int) (URM_DEFAULT_SIZE * SCALE);
 }

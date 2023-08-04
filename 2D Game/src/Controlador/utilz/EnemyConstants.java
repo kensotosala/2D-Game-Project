@@ -1,26 +1,22 @@
 package utilz;
 
-import main.Game;
 import java.awt.image.BufferedImage;
 
 public class EnemyConstants {
-    public final int CRABMEAT = 0;
 
+    private final float SCALE = 2f;
+    public final int CRABMEAT = 0;
     public final int IDLE = 0;
     public final int RUNNING = 1;
     public final int ATTACK = 2;
     public final int HIT = 3;
     public final int DEAD = 4;
-
     public final int CRABMEAT_WIDTH_DEFAULT = 72;
     public final int CRABMEAT_HEIGHT_DEFAULT = 32;
-
-    public final int CRABMEAT_WIDTH = (int) (CRABMEAT_WIDTH_DEFAULT * Game.SCALE);
-    public final int CRABMEAT_HEIGHT = (int) (CRABMEAT_HEIGHT_DEFAULT * Game.SCALE);
-
-    public final int CRABMEAT_DRAWOFFSET_X = (int) (26 * Game.SCALE);
-    public final int CRABMEAT_DRAWOFFSET_Y = (int) (9 * Game.SCALE);
-
+    public final int CRABMEAT_WIDTH = (int) (CRABMEAT_WIDTH_DEFAULT * SCALE);
+    public final int CRABMEAT_HEIGHT = (int) (CRABMEAT_HEIGHT_DEFAULT * SCALE);
+    public final int CRABMEAT_DRAWOFFSET_X = (int) (26 * SCALE);
+    public final int CRABMEAT_DRAWOFFSET_Y = (int) (9 * SCALE);
     private BufferedImage[][] crabmeatArr;
     private LoadSave loadSave = new LoadSave();
 
@@ -66,11 +62,11 @@ public class EnemyConstants {
     }
 
     public int getCrabmeatWidth() {
-        return (int) (CRABMEAT_WIDTH_DEFAULT * Game.SCALE);
+        return (int) (CRABMEAT_WIDTH_DEFAULT * SCALE);
     }
 
     public int getCrabmeatHeight() {
-        return (int) (CRABMEAT_HEIGHT_DEFAULT * Game.SCALE);
+        return (int) (CRABMEAT_HEIGHT_DEFAULT * SCALE);
     }
 
     public BufferedImage[][] GetEnemySprites(int enemy_type) {

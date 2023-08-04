@@ -5,11 +5,15 @@ import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import entities.Crabmeat;
-import main.Game;
 
 public class HelpMethods {
 
     private EnemyConstants enemyConstants = new EnemyConstants();
+    private final int TILES_DEFAULT_SIZE = 32;
+    private final float SCALE = 2f;
+    private final int TILES_IN_HEIGHT = 14;
+    private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
     public boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) {
         if (!IsSolid(x, y, lvlData))
@@ -21,13 +25,13 @@ public class HelpMethods {
     }
 
     private boolean IsSolid(float x, float y, int[][] lvlData) {
-        int maxWidth = lvlData[0].length * Game.TILES_SIZE;
+        int maxWidth = lvlData[0].length * TILES_SIZE;
         if (x < 0 || x >= maxWidth)
             return true;
-        if (y < 0 || y >= Game.GAME_HEIGHT)
+        if (y < 0 || y >= GAME_HEIGHT)
             return true;
-        float xIndex = x / Game.TILES_SIZE;
-        float yIndex = y / Game.TILES_SIZE;
+        float xIndex = x / TILES_SIZE;
+        float yIndex = y / TILES_SIZE;
 
         return IsTileSolid((int) xIndex, (int) yIndex, lvlData);
     }
@@ -41,27 +45,27 @@ public class HelpMethods {
     }
 
     public float GetEntityXPosNextToWall(Rectangle2D.Float hitbox, float xSpeed) {
-        int currentTile = (int) (hitbox.x / Game.TILES_SIZE);
+        int currentTile = (int) (hitbox.x / TILES_SIZE);
         if (xSpeed > 0) {
             // Right
-            int tileXPos = currentTile * Game.TILES_SIZE;
-            int xOffset = (int) (Game.TILES_SIZE - hitbox.width);
+            int tileXPos = currentTile * TILES_SIZE;
+            int xOffset = (int) (TILES_SIZE - hitbox.width);
             return tileXPos + xOffset - 1;
         } else
             // Left
-            return currentTile * Game.TILES_SIZE;
+            return currentTile * TILES_SIZE;
     }
 
     public float GetEntityYPosUnderRoofOrAboveFloor(Rectangle2D.Float hitbox, float airSpeed) {
-        int currentTile = (int) (hitbox.y / Game.TILES_SIZE);
+        int currentTile = (int) (hitbox.y / TILES_SIZE);
         if (airSpeed > 0) {
             // Falling - touching floor
-            int tileYPos = currentTile * Game.TILES_SIZE;
-            int yOffset = (int) (Game.TILES_SIZE - hitbox.height);
+            int tileYPos = currentTile * TILES_SIZE;
+            int yOffset = (int) (TILES_SIZE - hitbox.height);
             return tileYPos + yOffset - 1;
         } else
             // Jumping
-            return currentTile * Game.TILES_SIZE;
+            return currentTile * TILES_SIZE;
 
     }
 
@@ -91,8 +95,8 @@ public class HelpMethods {
 
     public boolean IsSightClear(int[][] lvlData, Rectangle2D.Float firstHitbox, Rectangle2D.Float secondHitbox,
             int yTile) {
-        int firstXTile = (int) (firstHitbox.x / Game.TILES_SIZE);
-        int secondXTile = (int) (secondHitbox.x / Game.TILES_SIZE);
+        int firstXTile = (int) (firstHitbox.x / TILES_SIZE);
+        int secondXTile = (int) (secondHitbox.x / TILES_SIZE);
 
         if (firstXTile > secondXTile)
             return IsAllTilesWalkable(secondXTile, firstXTile, yTile, lvlData);
@@ -133,7 +137,7 @@ public class HelpMethods {
                 Color color = new Color(img.getRGB(i, j));
                 int value = color.getGreen();
                 if (value == enemyConstants.CRABMEAT) {
-                    crabs[crabIndex] = new Crabmeat(i * Game.TILES_SIZE, j * Game.TILES_SIZE, enemyConstants);
+                    crabs[crabIndex] = new Crabmeat(i * TILES_SIZE, j * TILES_SIZE, enemyConstants);
                     crabIndex++;
                 }
             }
@@ -148,9 +152,9 @@ public class HelpMethods {
                 Color color = new Color(img.getRGB(i, j));
                 int value = color.getGreen();
                 if (value == 100)
-                    return new Point(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
+                    return new Point(i * TILES_SIZE, j * TILES_SIZE);
             }
-        return new Point(1 * Game.TILES_SIZE, 1 * Game.TILES_SIZE);
+        return new Point(1 * TILES_SIZE, 1 * TILES_SIZE);
     }
 
 }

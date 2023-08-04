@@ -9,6 +9,10 @@ import main.Game;
 import utilz.LoadSave;
 
 public class LevelManager {
+	private final int TILES_DEFAULT_SIZE = 32;
+	private final float SCALE = 2f;;
+	private final int TILES_IN_HEIGHT = 14;
+	private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
 
 	private Game game;
 	private BufferedImage[] levelSprite;
@@ -54,11 +58,11 @@ public class LevelManager {
 	}
 
 	public void draw(Graphics g, int lvlOffset) {
-		for (int j = 0; j < Game.TILES_IN_HEIGHT; j++)
+		for (int j = 0; j < TILES_IN_HEIGHT; j++)
 			for (int i = 0; i < levels.get(lvlIndex).getLevelData()[0].length; i++) {
 				int index = levels.get(lvlIndex).getSpriteIndex(i, j);
-				g.drawImage(levelSprite[index], Game.TILES_SIZE * i - lvlOffset, Game.TILES_SIZE * j, Game.TILES_SIZE,
-						Game.TILES_SIZE, null);
+				g.drawImage(levelSprite[index], TILES_SIZE * i - lvlOffset, TILES_SIZE * j, TILES_SIZE,
+						TILES_SIZE, null);
 			}
 	}
 

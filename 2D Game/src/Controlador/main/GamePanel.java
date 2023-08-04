@@ -5,13 +5,18 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
-import static main.Game.GAME_HEIGHT;
-import static main.Game.GAME_WIDTH;
 
 public class GamePanel extends JPanel {
 
 	private MouseInputs mouseInputs;
 	private Game game;
+	private final int TILES_DEFAULT_SIZE = 32;
+	private final float SCALE = 2f;
+	private final int TILES_IN_WIDTH = 26;
+	private final int TILES_IN_HEIGHT = 14;
+	private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+	private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+	private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
 	public GamePanel(Game game) {
 		mouseInputs = new MouseInputs(this);

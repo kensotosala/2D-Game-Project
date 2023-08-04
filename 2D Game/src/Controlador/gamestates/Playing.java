@@ -15,6 +15,13 @@ import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
 
 public class Playing extends State implements Statemethods {
+    private final int TILES_DEFAULT_SIZE = 32;
+    private final float SCALE = 2f;
+    private final int TILES_IN_WIDTH = 26;
+    private final int TILES_IN_HEIGHT = 14;
+    private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
     private Player player;
     private LevelManager levelManager;
     private EnemyManager enemyManager;
@@ -24,8 +31,8 @@ public class Playing extends State implements Statemethods {
     private boolean paused = false;
 
     private int xLvlOffset;
-    private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
-    private int rightBorder = (int) (0.8 * Game.GAME_WIDTH);
+    private int leftBorder = (int) (0.2 * GAME_WIDTH);
+    private int rightBorder = (int) (0.8 * GAME_WIDTH);
     private int maxLvlOffsetX;
 
     private boolean gameOver;
@@ -61,7 +68,7 @@ public class Playing extends State implements Statemethods {
         levelManager = new LevelManager(game);
         enemyManager = new EnemyManager(this);
 
-        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE), this);
+        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE), this);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
         player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
 
@@ -117,7 +124,7 @@ public class Playing extends State implements Statemethods {
 
         if (paused) {
             g.setColor(new Color(0, 0, 0, 150));
-            g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+            g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
             pauseOverlay.draw(g);
         } else if (gameOver)
             gameOverOverlay.draw(g);

@@ -5,10 +5,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
-import main.Game;
 import utilz.EnemyConstants;
 
 public class Crabmeat extends Enemy {
+    private final float SCALE = 2f;
 
     private static final int RIGHT = 0;
     private Rectangle2D.Float attackBox;
@@ -19,13 +19,13 @@ public class Crabmeat extends Enemy {
         super(x, y, enemyConstants.getCrabmeatWidth(), enemyConstants.getCrabmeatHeight(),
                 enemyConstants.CRABMEAT);
         this.enemyConstants = enemyConstants;
-        initHitbox(x, y, (int) (22 * Game.SCALE), (int) (19 * Game.SCALE));
+        initHitbox(x, y, (int) (22 * SCALE), (int) (19 * SCALE));
         initAttackBox();
     }
 
     private void initAttackBox() {
-        attackBox = new Rectangle2D.Float(x, y, (int) (82 * Game.SCALE), (int) (19 * Game.SCALE));
-        attackBoxOffsetX = (int) (Game.SCALE * 30);
+        attackBox = new Rectangle2D.Float(x, y, (int) (82 * SCALE), (int) (19 * SCALE));
+        attackBoxOffsetX = (int) (SCALE * 30);
     }
 
     public void update(int[][] lvlData, Player player) {

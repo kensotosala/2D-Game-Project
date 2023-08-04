@@ -3,7 +3,6 @@ package levels;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import entities.Crabmeat;
-import main.Game;
 import utilz.HelpMethods;
 
 public class Level {
@@ -16,6 +15,10 @@ public class Level {
 	private int maxLvlOffsetX;
 	private Point playerSpawn;
 	private HelpMethods helpMethods = new HelpMethods();
+	private final int TILES_DEFAULT_SIZE = 32;
+	private final float SCALE = 2f;
+	private final int TILES_IN_WIDTH = 26;
+	private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
 
 	public Level(BufferedImage img) {
 		this.img = img;
@@ -31,8 +34,8 @@ public class Level {
 
 	private void calcLvlOffsets() {
 		lvlTilesWide = img.getWidth();
-		maxTilesOffset = lvlTilesWide - Game.TILES_IN_WIDTH;
-		maxLvlOffsetX = Game.TILES_SIZE * maxTilesOffset;
+		maxTilesOffset = lvlTilesWide - TILES_IN_WIDTH;
+		maxLvlOffsetX = TILES_SIZE * maxTilesOffset;
 	}
 
 	private void createEnemies() {

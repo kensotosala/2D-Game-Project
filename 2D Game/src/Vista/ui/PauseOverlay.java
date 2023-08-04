@@ -3,10 +3,8 @@ package ui;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-
 import gamestates.Gamestate;
 import gamestates.Playing;
-import main.Game;
 import utilz.LoadSave;
 import utilz.PauseButtons;
 import utilz.URMButtons;
@@ -30,6 +28,11 @@ public class PauseOverlay {
 	private VolumeButtons volumeButtonObject = new VolumeButtons();
 	private VolumeButton volumeButton;
 	private PauseButtons pauseButton = new PauseButtons();
+	private final int TILES_DEFAULT_SIZE = 32;
+	private final float SCALE = 2f;
+	private final int TILES_IN_WIDTH = 26;
+	private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+	private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
 
 	public PauseOverlay(Playing playing) {
 		this.playing = playing;
@@ -41,17 +44,17 @@ public class PauseOverlay {
 	}
 
 	private void createVolumeButton() {
-		int vX = (int) (309 * Game.SCALE);
-		int vY = (int) (278 * Game.SCALE);
+		int vX = (int) (309 * SCALE);
+		int vY = (int) (278 * SCALE);
 		volumeButton = new VolumeButton(vX, vY, volumeButtonObject.SLIDER_WIDTH, volumeButtonObject.VOLUME_HEIGHT,
 				volumeButtonObject);
 	}
 
 	private void createUrmButtons() {
-		int menuX = (int) (313 * Game.SCALE);
-		int replayX = (int) (387 * Game.SCALE);
-		int unpauseX = (int) (462 * Game.SCALE);
-		int bY = (int) (325 * Game.SCALE);
+		int menuX = (int) (313 * SCALE);
+		int replayX = (int) (387 * SCALE);
+		int unpauseX = (int) (462 * SCALE);
+		int bY = (int) (325 * SCALE);
 
 		menuB = new UrmButton(menuX, bY, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 2);
 		replayB = new UrmButton(replayX, bY, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 1);
@@ -59,19 +62,19 @@ public class PauseOverlay {
 	}
 
 	private void createSoundButtons() {
-		int soundX = (int) (450 * Game.SCALE);
-		int musicY = (int) (140 * Game.SCALE);
-		int sfxY = (int) (186 * Game.SCALE);
+		int soundX = (int) (450 * SCALE);
+		int musicY = (int) (140 * SCALE);
+		int sfxY = (int) (186 * SCALE);
 		musicButton = new SoundButton(soundX, musicY, pauseButton.SOUND_SIZE, pauseButton.SOUND_SIZE);
 		sfxButton = new SoundButton(soundX, sfxY, pauseButton.SOUND_SIZE, pauseButton.SOUND_SIZE);
 	}
 
 	private void loadBackground() {
 		backgroundImg = loadSave.GetSpriteAtlas(loadSave.PAUSE_BACKGROUND);
-		bgW = (int) (backgroundImg.getWidth() * Game.SCALE);
-		bgH = (int) (backgroundImg.getHeight() * Game.SCALE);
-		bgX = Game.GAME_WIDTH / 2 - bgW / 2;
-		bgY = (int) (25 * Game.SCALE);
+		bgW = (int) (backgroundImg.getWidth() * SCALE);
+		bgH = (int) (backgroundImg.getHeight() * SCALE);
+		bgX = GAME_WIDTH / 2 - bgW / 2;
+		bgY = (int) (25 * SCALE);
 	}
 
 	public void update() {

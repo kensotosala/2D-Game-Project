@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 
 import gamestates.Gamestate;
 import gamestates.Playing;
-import main.Game;
 import utilz.LoadSave;
 import utilz.URMButtons;
 
@@ -19,6 +18,13 @@ public class LevelCompletedOverlay {
     private BufferedImage img;
     private int bgX, bgY, bgW, bgH;
     LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
+    private final int TILES_DEFAULT_SIZE = 32;
+    private final float SCALE = 2f;
+    private final int TILES_IN_WIDTH = 26;
+    private final int TILES_IN_HEIGHT = 14;
+    private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
     public LevelCompletedOverlay(Playing playing) {
         this.playing = playing;
@@ -27,25 +33,25 @@ public class LevelCompletedOverlay {
     }
 
     private void initButtons() {
-        int menuX = (int) (330 * Game.SCALE);
-        int nextX = (int) (445 * Game.SCALE);
-        int y = (int) (195 * Game.SCALE);
+        int menuX = (int) (330 * SCALE);
+        int nextX = (int) (445 * SCALE);
+        int y = (int) (195 * SCALE);
         next = new UrmButton(nextX, y, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 0);
         menu = new UrmButton(menuX, y, urmButtons.URM_SIZE, urmButtons.URM_SIZE, 2);
     }
 
     private void initImg() {
         img = loadSave.GetSpriteAtlas(loadSave.COMPLETED_IMG);
-        bgW = (int) (img.getWidth() * Game.SCALE);
-        bgH = (int) (img.getHeight() * Game.SCALE);
-        bgX = Game.GAME_WIDTH / 2 - bgW / 2;
-        bgY = (int) (75 * Game.SCALE);
+        bgW = (int) (img.getWidth() * SCALE);
+        bgH = (int) (img.getHeight() * SCALE);
+        bgX = GAME_WIDTH / 2 - bgW / 2;
+        bgY = (int) (75 * SCALE);
     }
 
     public void draw(Graphics g) {
         // Added after youtube upload
         g.setColor(new Color(0, 0, 0, 200));
-        g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+        g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
         // Mostrar los contadores de estadísticas
         int partidasJugadas = playing.getPartidasJugadas();

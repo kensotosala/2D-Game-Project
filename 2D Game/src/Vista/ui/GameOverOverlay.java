@@ -6,9 +6,15 @@ import java.awt.event.KeyEvent;
 
 import gamestates.Gamestate;
 import gamestates.Playing;
-import main.Game;
 
 public class GameOverOverlay {
+    private final int TILES_DEFAULT_SIZE = 32;
+    private final float SCALE = 2f;
+    private final int TILES_IN_WIDTH = 26;
+    private final int TILES_IN_HEIGHT = 14;
+    private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
     private Playing playing;
 
@@ -18,11 +24,11 @@ public class GameOverOverlay {
 
     public void draw(Graphics g) {
         g.setColor(new Color(0, 0, 0, 200));
-        g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+        g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
         g.setColor(Color.white);
-        g.drawString("Game Over", Game.GAME_WIDTH / 2, 150);
-        g.drawString("Press esc to enter Main Menu!", Game.GAME_WIDTH / 2, 300);
+        g.drawString("Game Over", GAME_WIDTH / 2, 150);
+        g.drawString("Press esc to enter Main Menu!", GAME_WIDTH / 2, 300);
 
     }
 

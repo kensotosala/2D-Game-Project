@@ -10,6 +10,13 @@ import ui.MenuButton;
 import utilz.LoadSave;
 
 public class Menu extends State implements Statemethods {
+	private final int TILES_DEFAULT_SIZE = 32;
+	private final float SCALE = 2f;
+	private final int TILES_IN_WIDTH = 26;
+	private final int TILES_IN_HEIGHT = 14;
+	private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+	private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+	private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
 	private MenuButton[] buttons = new MenuButton[3];
 	private BufferedImage backgroundImg;
@@ -29,17 +36,17 @@ public class Menu extends State implements Statemethods {
 
 	private void loadBackground() {
 		backgroundImg = loadSave.GetSpriteAtlas(loadSave.MENU_BACKGROUND);
-		menuWidth = (int) (backgroundImg.getWidth() * Game.SCALE);
-		menuHeight = (int) (backgroundImg.getHeight() * Game.SCALE);
-		menuX = Game.GAME_WIDTH / 2 - menuWidth / 2;
-		menuY = (int) (45 * Game.SCALE);
+		menuWidth = (int) (backgroundImg.getWidth() * SCALE);
+		menuHeight = (int) (backgroundImg.getHeight() * SCALE);
+		menuX = GAME_WIDTH / 2 - menuWidth / 2;
+		menuY = (int) (45 * SCALE);
 
 	}
 
 	private void loadButtons() {
-		buttons[0] = new MenuButton(Game.GAME_WIDTH / 2, (int) (150 * Game.SCALE), 0, Gamestate.PLAYING);
-		buttons[1] = new MenuButton(Game.GAME_WIDTH / 2, (int) (220 * Game.SCALE), 1, Gamestate.OPTIONS);
-		buttons[2] = new MenuButton(Game.GAME_WIDTH / 2, (int) (290 * Game.SCALE), 2, Gamestate.QUIT);
+		buttons[0] = new MenuButton(GAME_WIDTH / 2, (int) (150 * SCALE), 0, Gamestate.PLAYING);
+		buttons[1] = new MenuButton(GAME_WIDTH / 2, (int) (220 * SCALE), 1, Gamestate.OPTIONS);
+		buttons[2] = new MenuButton(GAME_WIDTH / 2, (int) (290 * SCALE), 2, Gamestate.QUIT);
 	}
 
 	@Override
@@ -51,7 +58,7 @@ public class Menu extends State implements Statemethods {
 	@Override
 	public void draw(Graphics g) {
 
-		g.drawImage(backgroundImageMain, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+		g.drawImage(backgroundImageMain, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
 		g.drawImage(backgroundImg, menuX, menuY, menuWidth, menuHeight, null);
 
 		for (MenuButton mb : buttons)

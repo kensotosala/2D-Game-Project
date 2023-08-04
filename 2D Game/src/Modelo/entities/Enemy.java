@@ -1,13 +1,14 @@
 package entities;
 
 import java.awt.geom.Rectangle2D;
-
-import main.Game;
 import utilz.Directions;
 import utilz.EnemyConstants;
 import utilz.HelpMethods;
 
 public abstract class Enemy extends Entity {
+    private final int TILES_DEFAULT_SIZE = 32;
+    private final float SCALE = 2f;
+    private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
     protected int aniIndex;
     protected int enemyState;
     protected int enemyType;
@@ -16,10 +17,10 @@ public abstract class Enemy extends Entity {
     protected boolean firstUpdate = true;
     protected boolean inAir;
     protected float fallSpeed;
-    protected float gravity = 0.04f * Game.SCALE;
-    protected float walkSpeed = 0.35f * Game.SCALE;
+    protected float gravity = 0.04f * SCALE;
+    protected float walkSpeed = 0.35f * SCALE;
     protected int tileY;
-    protected float attackDistance = Game.TILES_SIZE;
+    protected float attackDistance = TILES_SIZE;
     protected int maxHealth;
     protected int currentHealth;
     protected boolean active = true;
@@ -63,7 +64,7 @@ public abstract class Enemy extends Entity {
         } else {
             inAir = false;
             hitbox.y = helpMethods.GetEntityYPosUnderRoofOrAboveFloor(hitbox, fallSpeed);
-            tileY = (int) (hitbox.y / Game.TILES_SIZE);
+            tileY = (int) (hitbox.y / TILES_SIZE);
         }
     }
 
@@ -92,7 +93,7 @@ public abstract class Enemy extends Entity {
     }
 
     protected boolean canSeePlayer(int[][] lvlData, Player player) {
-        int playerTileY = (int) (player.getHitbox().y / Game.TILES_SIZE);
+        int playerTileY = (int) (player.getHitbox().y / TILES_SIZE);
         if (playerTileY == tileY)
             if (isPlayerInRange(player)) {
                 if (helpMethods.IsSightClear(lvlData, hitbox, player.hitbox, tileY))
