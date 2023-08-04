@@ -43,13 +43,21 @@ public class VolumeButton extends PauseButton {
 
     }
 
-    public void update() {
-        index = 0;
-        if (mouseOver)
-            index = 1;
-        if (mousePressed)
-            index = 2;
+    // Algoritmo de búsqueda lineal
+    // Método para buscar el índice del array que corresponde a la imagen
+    // seleccionada
+    private int findSelectedImageIndex() {
+        if (mousePressed) {
+            return 2; // Índice 2 corresponde a la imagen de botón presionado
+        } else if (mouseOver) {
+            return 1; // Índice 1 corresponde a la imagen de botón con mouse encima
+        } else {
+            return 0; // Índice 0 corresponde a la imagen de botón normal
+        }
+    }
 
+    public void update() {
+        index = findSelectedImageIndex();
     }
 
     public void draw(Graphics g) {
