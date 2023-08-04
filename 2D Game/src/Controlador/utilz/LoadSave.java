@@ -40,6 +40,27 @@ public class LoadSave {
 		return img;
 	}
 
+	private void bubbleSortFiles(File[] files) {
+		int n = files.length;
+		boolean swapped;
+		for (int i = 0; i < n - 1; i++) {
+			swapped = false;
+			for (int j = 0; j < n - i - 1; j++) {
+				if (Integer.parseInt(files[j].getName().replace(".png", "")) > Integer
+						.parseInt(files[j + 1].getName().replace(".png", ""))) {
+					// Intercambiar elementos
+					File temp = files[j];
+					files[j] = files[j + 1];
+					files[j + 1] = temp;
+					swapped = true;
+				}
+			}
+			// Si no hubo intercambios en la iteración, entonces la matriz está ordenada
+			if (!swapped)
+				break;
+		}
+	}
+
 	public BufferedImage[] GetAllLevels() {
 		URL url = LoadSave.class.getResource("/resources/lvls");
 		File file = null;
@@ -51,18 +72,12 @@ public class LoadSave {
 		}
 
 		File[] files = file.listFiles();
-		File[] filesSorted = new File[files.length];
+		bubbleSortFiles(files); // Llamada al Bubble Sort para ordenar los archivos
 
-		for (int i = 0; i < filesSorted.length; i++)
-			for (int j = 0; j < filesSorted.length; j++) {
-				if (files[j].getName().equals((i + 1) + ".png"))
-					filesSorted[j] = files[i];
-			}
-
-		BufferedImage[] imgs = new BufferedImage[filesSorted.length];
+		BufferedImage[] imgs = new BufferedImage[files.length];
 		for (int i = 0; i < imgs.length; i++)
 			try {
-				imgs[i] = ImageIO.read(filesSorted[i]);
+				imgs[i] = ImageIO.read(files[i]);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
