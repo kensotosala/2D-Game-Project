@@ -24,6 +24,8 @@ public class LoadSave {
 	public final String STATUS_BAR = "resources/health_power_bar.png";
 	public final String COMPLETED_IMG = "resources/completed_sprite.png";
 
+	private Node head;
+
 	public BufferedImage GetSpriteAtlas(String fileName) {
 		BufferedImage img = null;
 		try {
@@ -61,6 +63,42 @@ public class LoadSave {
 		}
 	}
 
+	public void add(BufferedImage data) {
+		Node newNode = new Node(data);
+		if (head == null) {
+			head = newNode;
+		} else {
+			Node current = head;
+			while (current.next != null) {
+				current = current.next;
+			}
+			current.next = newNode;
+		}
+	}
+
+	public int size() {
+		int count = 0;
+		Node current = head;
+		while (current != null) {
+			count++;
+			current = current.next;
+		}
+		return count;
+	}
+
+	public BufferedImage get(int index) {
+		int count = 0;
+		Node current = head;
+		while (current != null) {
+			if (count == index) {
+				return current.data;
+			}
+			count++;
+			current = current.next;
+		}
+		throw new IndexOutOfBoundsException("Index out of range: " + index);
+	}
+
 	public BufferedImage[] GetAllLevels() {
 		URL url = LoadSave.class.getResource("/resources/lvls");
 		File file = null;
@@ -74,16 +112,20 @@ public class LoadSave {
 		File[] files = file.listFiles();
 		bubbleSortFiles(files); // Llamada al Bubble Sort para ordenar los archivos
 
-		BufferedImage[] imgs = new BufferedImage[files.length];
-		for (int i = 0; i < imgs.length; i++)
+		for (int i = 0; i < files.length; i++) {
 			try {
-				imgs[i] = ImageIO.read(files[i]);
+				BufferedImage img = ImageIO.read(files[i]);
+				add(img);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+
+		BufferedImage[] imgs = new BufferedImage[size()];
+		for (int i = 0; i < imgs.length; i++) {
+			imgs[i] = get(i);
+		}
 
 		return imgs;
-
 	}
-
 }
