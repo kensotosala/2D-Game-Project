@@ -11,32 +11,33 @@ import utilz.HelpMethods;
 import utilz.LoadSave;
 import utilz.PlayerConstants;
 
+// Clase que representa al personaje del jugador en el juego
 public class Player extends Entity {
-	private PlayerConstants playerConstants = new PlayerConstants();
-	private final float SCALE = 2f;
-	private BufferedImage[][] animations;
-	private int aniTick;
-	private int aniIndex;
-	private int aniSpeed = 25;
-	private int playerAction = playerConstants.IDLE;
-	private boolean moving;
-	private boolean attacking;
-	private boolean left;
-	private boolean up;
-	private boolean right;
-	private boolean down;
-	private boolean jump;
-	private float playerSpeed = 1.0f * SCALE;
-	private int[][] lvlData;
-	private float xDrawOffset = 21 * SCALE;
-	private float yDrawOffset = 4 * SCALE;
+	private PlayerConstants playerConstants = new PlayerConstants(); // Constantes relacionadas con el jugador
+	private final float SCALE = 2f; // Escala para ajustar el tamaño de la entidad
+	private BufferedImage[][] animations; // Matriz de animaciones para el jugador
+	private int aniTick; // Contador para controlar la velocidad de la animación
+	private int aniIndex; // Índice de la animación actual
+	private int aniSpeed = 25; // Velocidad de la animación
+	private int playerAction = playerConstants.IDLE; // Acción actual del jugador
+	private boolean moving; // Indica si el jugador se está moviendo
+	private boolean attacking; // Indica si el jugador está atacando
+	private boolean left; // Indica si el jugador se está moviendo hacia la izquierda
+	private boolean up; // Indica si el jugador se está moviendo hacia arriba
+	private boolean right; // Indica si el jugador se está moviendo hacia la derecha
+	private boolean down; // Indica si el jugador se está moviendo hacia abajo
+	private boolean jump; // Indica si el jugador está saltando
+	private float playerSpeed = 1.0f * SCALE; // Velocidad de movimiento del jugador
+	private int[][] lvlData; // Datos del nivel del juego
+	private float xDrawOffset = 21 * SCALE; // Desplazamiento horizontal para dibujar el jugador
+	private float yDrawOffset = 4 * SCALE; // Desplazamiento vertical para dibujar el jugador
 
-	// Jumping / Gravity
-	private float airSpeed = 0f;
-	private float gravity = 0.04f * SCALE;
-	private float jumpSpeed = -2.25f * SCALE;
-	private float fallSpeedAfterCollision = 0.5f * SCALE;
-	private boolean inAir = false;
+	// Salto / Gravedad
+	private float airSpeed = 0f; // Velocidad en el aire
+	private float gravity = 0.04f * SCALE; // Valor de gravedad
+	private float jumpSpeed = -2.25f * SCALE; // Velocidad de salto
+	private float fallSpeedAfterCollision = 0.5f * SCALE; // Velocidad de caída después de la colisión
+	private boolean inAir = false; // Indica si el jugador está en el aire
 
 	// StatusBarUI
 	private BufferedImage statusBarImg;
@@ -66,6 +67,7 @@ public class Player extends Entity {
 	private Playing playing;
 	LoadSave loadSave = new LoadSave(); // Crear una instancia de LoadSave
 
+	// Constructor para crear una instancia del jugador
 	public Player(float x, float y, int width, int height, Playing playing) {
 		super(x, y, width, height);
 		this.playing = playing;

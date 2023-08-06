@@ -5,9 +5,11 @@ import java.awt.event.WindowFocusListener;
 
 import javax.swing.JFrame;
 
+// Clase que representa la ventana principal del juego
 public class GameWindow {
 	private JFrame jframe;
 
+	// Constructor de la ventana del juego
 	public GameWindow(GamePanel gamePanel) {
 
 		jframe = new JFrame();

@@ -14,7 +14,9 @@ import ui.GameOverOverlay;
 import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
 
+// Clase que representa el estado de juego mientras se está jugando
 public class Playing extends State implements Statemethods {
+    // Constantes para dimensiones y escalas
     private final int TILES_DEFAULT_SIZE = 32;
     private final float SCALE = 2f;
     private final int TILES_IN_WIDTH = 26;
@@ -22,27 +24,32 @@ public class Playing extends State implements Statemethods {
     private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
     private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
     private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
+
+    // Instancias de clases de gestión y elementos del juego
     private Player player;
     private LevelManager levelManager;
     private EnemyManager enemyManager;
     private PauseOverlay pauseOverlay;
     private GameOverOverlay gameOverOverlay;
     private LevelCompletedOverlay levelCompletedOverlay;
+    // Variables para controlar el estado del juego
     private boolean paused = false;
+    private boolean gameOver;
+    private boolean lvlCompleted;
+    private boolean lostGame = false;
 
+    // Variables para controlar el desplazamiento horizontal del nivel
     private int xLvlOffset;
     private int leftBorder = (int) (0.2 * GAME_WIDTH);
     private int rightBorder = (int) (0.8 * GAME_WIDTH);
     private int maxLvlOffsetX;
 
-    private boolean gameOver;
-    private boolean lvlCompleted;
-
+    // Estadísticas del juego
     private int partidasJugadas = 0;
     private int partidasGanadas = 0;
     private int partidasPerdidas = 0;
-    private boolean lostGame = false;
 
+    // Constructor de la clase Playing
     public Playing(Game game) {
         super(game);
         initClasses();
@@ -50,20 +57,7 @@ public class Playing extends State implements Statemethods {
         loadStartLevel();
     }
 
-    public void loadNextLevel() {
-        resetAll();
-        levelManager.loadNextLevel();
-        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
-    }
-
-    private void loadStartLevel() {
-        enemyManager.loadEnemies(levelManager.getCurrentLevel());
-    }
-
-    private void calcLvlOffset() {
-        maxLvlOffsetX = levelManager.getCurrentLevel().getLvlOffset();
-    }
-
+    // Inicializa las instancias de clases y elementos del juego
     private void initClasses() {
         levelManager = new LevelManager(game);
         enemyManager = new EnemyManager(this);
@@ -74,10 +68,29 @@ public class Playing extends State implements Statemethods {
 
         pauseOverlay = new PauseOverlay(this);
         gameOverOverlay = new GameOverOverlay(this);
-        levelCompletedOverlay = new LevelCompletedOverlay(this); // Corrected
-                                                                 // line
+        levelCompletedOverlay = new LevelCompletedOverlay(this);
     }
 
+    // Carga el siguiente nivel del juego
+    public void loadNextLevel() {
+        resetAll();
+        levelManager.loadNextLevel();
+        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+        enemyManager.loadEnemies(levelManager.getCurrentLevel());
+        calcLvlOffset();
+    }
+
+    // Carga el nivel inicial del juego
+    private void loadStartLevel() {
+        enemyManager.loadEnemies(levelManager.getCurrentLevel());
+    }
+
+    // Calcula el desplazamiento horizontal del nivel
+    private void calcLvlOffset() {
+        maxLvlOffsetX = levelManager.getCurrentLevel().getLvlOffset();
+    }
+
+    // Actualiza la lógica del juego
     @Override
     public void update() {
         if (paused) {
@@ -90,17 +103,13 @@ public class Playing extends State implements Statemethods {
             enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             checkCloseToBorder();
         } else {
-            // Si el juego ha terminado (gameOver es verdadero), no es necesario
-            // incrementar partidas perdidas aquí.
-            // En lugar de eso, lo haremos en el método resetAll() si el juego se ha
-            // perdido.
             if (!lostGame) {
-                lostGame = true; // Actualización: Marcamos el juego como perdido para evitar el incremento
-                                 // múltiple
+                lostGame = true;
             }
         }
     }
 
+    // Verifica si el jugador está cerca de los bordes y ajusta el desplazamiento
     private void checkCloseToBorder() {
         int playerX = (int) player.getHitbox().x;
         int diff = playerX - xLvlOffset;
@@ -116,6 +125,7 @@ public class Playing extends State implements Statemethods {
             xLvlOffset = 0;
     }
 
+    // Dibuja los elementos del juego en pantalla
     @Override
     public void draw(Graphics g) {
         levelManager.draw(g, xLvlOffset);
@@ -132,6 +142,7 @@ public class Playing extends State implements Statemethods {
             levelCompletedOverlay.draw(g);
     }
 
+    // Métodos para gestionar interacciones del jugador y el estado del juego
     public void resetAll() {
         gameOver = false;
         paused = false;
@@ -259,7 +270,7 @@ public class Playing extends State implements Statemethods {
         return enemyManager;
     }
 
-    // Métodos para actualizar las estadísticas
+    // Métodos para actualizar las estadísticas y variables del juego
     public void incrementPartidasJugadas() {
         partidasJugadas++;
     }

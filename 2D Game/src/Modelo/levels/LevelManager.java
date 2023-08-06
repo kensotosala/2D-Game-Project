@@ -12,7 +12,8 @@ public class LevelManager { // Declarar la clase LevelManager
 	private final int TILES_DEFAULT_SIZE = 32; // Tamaño predeterminado de los bloques
 	private final float SCALE = 2f; // Escala para el tamaño de los bloques
 	private final int TILES_IN_HEIGHT = 14; // Número de bloques en la altura del nivel
-	private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE); // Tamaño final de los bloques después de la escala
+	private final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE); // Tamaño final de los bloques después de la
+																		// escala
 
 	private Game game; // Instancia de la clase Game para acceder a la lógica del juego
 	private BufferedImage[] levelSprite; // Arreglo de imágenes para representar los bloques del nivel
@@ -41,7 +42,8 @@ public class LevelManager { // Declarar la clase LevelManager
 		lvlIndex++; // Incrementar el índice del nivel actual
 		if (lvlIndex >= getAmountOfLevels()) { // Si el índice es mayor o igual al número total de niveles
 			lvlIndex = 0; // Reiniciar el índice para volver al primer nivel
-			System.out.println("No more levels! Game Completed!"); // Imprimir un mensaje indicando que se completó el juego
+			System.out.println("No more levels! Game Completed!"); // Imprimir un mensaje indicando que se completó el
+																	// juego
 			Gamestate.state = Gamestate.MENU; // Cambiar el estado del juego a MENU (menú principal)
 		}
 
@@ -51,8 +53,10 @@ public class LevelManager { // Declarar la clase LevelManager
 		game.getPlaying().setMaxLvlOffset(newLevel.getLvlOffset()); // Establecer el desplazamiento máximo del nivel
 	}
 
+	// Recursividad
 	private void buildAllLevels() { // Método para construir todos los niveles
-		BufferedImage[] allLevels = loadSave.GetAllLevels(); // Obtener todas las imágenes de los niveles desde el archivo
+		BufferedImage[] allLevels = loadSave.GetAllLevels(); // Obtener todas las imágenes de los niveles desde el
+																// archivo
 		head = null; // Inicializar la LinkedList con el nodo principal como null
 		Node current = null; // Nodo auxiliar para recorrer la LinkedList
 
@@ -77,15 +81,21 @@ public class LevelManager { // Declarar la clase LevelManager
 		for (int j = 0; j < 4; j++) // Iterar a través de las filas de bloques en la imagen
 			for (int i = 0; i < 12; i++) { // Iterar a través de las columnas de bloques en la imagen
 				int index = j * 12 + i; // Calcular el índice para almacenar la imagen en el arreglo
-				levelSprite[index] = img.getSubimage(i * 32, j * 32, 32, 32); // Recortar y almacenar la imagen en el arreglo
+				levelSprite[index] = img.getSubimage(i * 32, j * 32, 32, 32); // Recortar y almacenar la imagen en el
+																				// arreglo
 			}
 	}
 
 	public void draw(Graphics g, int lvlOffset) { // Método para dibujar los bloques del nivel en la pantalla
 		for (int j = 0; j < TILES_IN_HEIGHT; j++) // Iterar a través de las filas de bloques en el nivel
-			for (int i = 0; i < getCurrentLevel().getLevelData()[0].length; i++) { // Iterar a través de las columnas de bloques en el nivel
+			for (int i = 0; i < getCurrentLevel().getLevelData()[0].length; i++) { // Iterar a través de las columnas de
+																					// bloques en el nivel
 				int index = getCurrentLevel().getSpriteIndex(i, j); // Obtener el índice de la imagen del bloque
-				g.drawImage(levelSprite[index], TILES_SIZE * i - lvlOffset, TILES_SIZE * j, TILES_SIZE, // Dibujar la imagen del bloque en la posición de la pantalla
+				g.drawImage(levelSprite[index], TILES_SIZE * i - lvlOffset, TILES_SIZE * j, TILES_SIZE, // Dibujar la
+																										// imagen del
+																										// bloque en la
+																										// posición de
+																										// la pantalla
 						TILES_SIZE, null);
 			}
 	}

@@ -9,7 +9,9 @@ import main.Game;
 import ui.MenuButton;
 import utilz.LoadSave;
 
+// Clase que representa el estado del menú del juego
 public class Menu extends State implements Statemethods {
+	// Constantes para dimensiones y escalas
 	private final int TILES_DEFAULT_SIZE = 32;
 	private final float SCALE = 2f;
 	private final int TILES_IN_WIDTH = 26;
@@ -18,22 +20,31 @@ public class Menu extends State implements Statemethods {
 	private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
 	private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
+	// Arreglo de botones del menú
 	private MenuButton[] buttons = new MenuButton[3];
+
+	// Imágenes de fondo
 	private BufferedImage backgroundImg;
 	private BufferedImage backgroundImageMain;
+
+	// Posiciones y dimensiones del menú
 	private int menuX;
 	private int menuY;
 	private int menuWidth;
 	private int menuHeight;
+
+	// Instancia de la clase LoadSave para cargar recursos
 	private LoadSave loadSave = new LoadSave();
 
+	// Constructor de la clase Menu
 	public Menu(Game game) {
 		super(game);
-		loadButtons();
-		loadBackground();
+		loadButtons(); // Carga los botones del menú
+		loadBackground(); // Carga la imagen de fondo
 		backgroundImageMain = loadSave.GetSpriteAtlas(loadSave.MENU_BACKGROUND_IMG);
 	}
 
+	// Carga la imagen de fondo del menú
 	private void loadBackground() {
 		backgroundImg = loadSave.GetSpriteAtlas(loadSave.MENU_BACKGROUND);
 		menuWidth = (int) (backgroundImg.getWidth() * SCALE);
@@ -43,18 +54,21 @@ public class Menu extends State implements Statemethods {
 
 	}
 
+	// Carga los botones del menú
 	private void loadButtons() {
 		buttons[0] = new MenuButton(GAME_WIDTH / 2, (int) (150 * SCALE), 0, Gamestate.PLAYING);
 		buttons[1] = new MenuButton(GAME_WIDTH / 2, (int) (220 * SCALE), 1, Gamestate.OPTIONS);
 		buttons[2] = new MenuButton(GAME_WIDTH / 2, (int) (290 * SCALE), 2, Gamestate.QUIT);
 	}
 
+	// Actualiza la lógica del menú
 	@Override
 	public void update() {
 		for (MenuButton mb : buttons)
 			mb.update();
 	}
 
+	// Dibuja el menú en pantalla
 	@Override
 	public void draw(Graphics g) {
 
@@ -65,6 +79,8 @@ public class Menu extends State implements Statemethods {
 			mb.draw(g);
 	}
 
+	// Implementación de métodos de interacción con el mouse y teclado (omitiendo
+	// detalles de implementación
 	@Override
 	public void mouseClicked(MouseEvent e) {
 

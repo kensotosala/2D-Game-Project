@@ -42,6 +42,7 @@ public class LoadSave {
 		return img;
 	}
 
+	// Algoritmo de ordenamiento
 	private void bubbleSortFiles(File[] files) {
 		int n = files.length;
 		boolean swapped;

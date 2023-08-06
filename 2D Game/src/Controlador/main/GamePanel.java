@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 
+// Panel que se utiliza para renderizar el juego
 public class GamePanel extends JPanel {
 
 	private MouseInputs mouseInputs;
@@ -18,6 +19,7 @@ public class GamePanel extends JPanel {
 	private final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
 	private final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
+	// Constructor del panel
 	public GamePanel(Game game) {
 		mouseInputs = new MouseInputs(this);
 		this.game = game;
@@ -27,20 +29,24 @@ public class GamePanel extends JPanel {
 		addMouseMotionListener(mouseInputs);
 	}
 
+	// Establece el tamaño preferido del panel
 	private void setPanelSize() {
 		Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT);
 		setPreferredSize(size);
 	}
 
+	// Actualiza el estado del juego
 	public void updateGame() {
-
+		game.update();
 	}
 
+	// Pinta los elementos del juego en el panel
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		game.render(g);
 	}
 
+	// Método para obtener la instancia del juego
 	public Game getGame() {
 		return game;
 	}
